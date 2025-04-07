@@ -107,6 +107,7 @@
             </tr>
           </tbody>
         </table>
+        <button @click="viewLast3MonthsGeneralReport">Lihat Laporan 3 Bulan Terakhir</button>
       </section>
 
       <!-- Laporan Penggunaan Rute -->
@@ -177,6 +178,7 @@
             </tr>
           </tbody>
         </table>
+        <button @click="viewLast3MonthsRouteReport">Lihat Laporan 3 Bulan Terakhir</button>
       </section>
 
       <!-- Tombol Unduh Laporan -->
@@ -260,6 +262,16 @@ export default {
     }
   },
   methods: {
+    viewLast3MonthsGeneralReport() {
+    // Logika untuk mengambil dan menampilkan data laporan kinerja umum 3 bulan terakhir
+    console.log("Melihat Laporan Kinerja Umum 3 Bulan Terakhir");
+    // Anda dapat menambahkan logika untuk mengambil data dari API atau sumber data lainnya di sini
+  },
+  viewLast3MonthsRouteReport() {
+    // Logika untuk mengambil dan menampilkan data laporan penggunaan rute 3 bulan terakhir
+    console.log("Melihat Laporan Penggunaan Rute 3 Bulan Terakhir");
+    // Anda dapat menambahkan logika untuk mengambil data dari API atau sumber data lainnya di sini
+  },
     downloadReport() {
       // Menampilkan elemen untuk tampilan cetak
       const printableArea = document.getElementById("printableArea");

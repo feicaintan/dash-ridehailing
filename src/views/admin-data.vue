@@ -97,7 +97,7 @@
         <router-link
           to="/loginform"
           class="menu-item"
-          :class="{ active: activeMenu === 'loginform' }"
+          :class="{ active: activeMenu === 'home' }"
           @click="setActiveMenu('loginform')"
         >
           <img

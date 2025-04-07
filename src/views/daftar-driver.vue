@@ -18,7 +18,6 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th>Foto</th>
             <th>Nama Pengemudi</th>
             <th>Nomor Telepon</th>
             <th>Email</th>
@@ -29,10 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="driver in filteredDrivers" :key="driver.email">
-            <td>
-              <img :src="driver.photo" alt="Driver Photo" class="driver-photo" />
-            </td>
+          <tr v-for="driver in filteredDrivers" :key="driver.id">
             <td>{{ driver.name }}</td>
             <td>{{ driver.phone }}</td>
             <td>{{ driver.email }}</td>
@@ -50,69 +46,10 @@
             </td>
           </tr>
           <tr v-if="filteredDrivers.length === 0">
-            <td colspan="8">Data tidak ditemukan.</td>
+            <td colspan="7">Data tidak ditemukan.</td>
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- Popup Konfirmasi Hapus Driver -->
-    <div v-if="deleteDriverPopup.show" class="popup-overlay">
-      <div class="popup">
-        <h2>Konfirmasi Hapus</h2>
-        <p>Apakah Anda yakin ingin menghapus <strong>{{ deleteDriverPopup.driver?.name }}</strong>?</p>
-        <div class="popup-buttons">
-          <button class="confirm-button" @click="deleteDriver(deleteDriverPopup.driver)">Ya, Hapus</button>
-          <button class="cancel-buttonblock" @click="deleteDriverPopup.show = false">Batal</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Popup Konfirmasi Blokir Driver -->
-    <div v-if="blockPopup.show" class="popup-overlay">
-      <div class="popup">
-        <h2>Konfirmasi Blokir</h2>
-        <p>Apakah Anda yakin ingin memblokir <strong>{{ blockPopup.user?.name }}</strong>?</p>
-        <div class="popup-buttons">
-          <button class="confirm-button" @click="blockUser ">Ya, Blokir</button>
-          <button class="cancel-buttonblock" @click="blockPopup.show = false">Batal</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Popup Form -->
-    <div v-if="showPopup" class="popup-overlay">
-      <div class="popup">
-        <h2>{{ isEditing ? "Edit Driver" : "Tambah Driver" }}</h2>
-        <form @submit.prevent="isEditing ? updateDriver() : addDriver()">
-          <div class="form-group">
-            <label for="name">Nama Driver:</label>
-            <input type="text" id="name" v-model="newDriver.name" required />
-          </div>
-          <div class="form-group">
-            <label for="phone">Nomor Telepon:</label>
-            <input type="text" id="phone" v-model="newDriver.phone" required />
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="newDriver.email" required />
-          </div>
-          <div class="form-group">
-            <label for="vehicleNumber">Nomor Kendaraan:</label>
-            <input type="text" id="vehicleNumber" v-model="newDriver.vehicleNumber" required />
-          </div>
-          <div class="form-group">
-            <label for="simNumber">Nomor SIM:</label>
-            <input type="text" id="simNumber" v-model="newDriver.simNumber" required />
-          </div>
-          <div class="popup-buttons">
-            <button type="submit" class="submit-button">
-              {{ isEditing ? "Update" : "Add" }}
-            </button>
-            <button type="button" class="cancel-button" @click="showPopup = false">Back</button>
-          </div>
-        </form>
-      </div>
     </div>
   </div>
 </template>
@@ -133,60 +70,95 @@ export default {
         email: "",
         vehicleNumber: "",
         simNumber: "",
-        photo: "", // Tambahkan foto
-        status: "offline", // Status default
+        status: "offline",
       },
-      drivers: [
-        {
-          name: "Budi Santoso",
-          phone: "081298765432",
-          email: "budi@example.com",
-          vehicleNumber: "B 1234 CD",
-          simNumber: "SIM123456",
-          photo: "@/assets/driver1.jpg", // Ganti dengan path foto yang sesuai
-          status: "online",
-        },
-        {
-          name: "Agus Widodo",
-          phone: "082334455667",
-          email: "agus@example.com",
-          vehicleNumber: "B 5678 EF",
-          simNumber: "SIM654321",
-          photo: "@/assets/driver2.jpg", // Ganti dengan path foto yang sesuai
-          status: "offline",
-        },
-        {
-          name: "Joko Widodo",
-          phone: "082334455667",
-          email: "joko@example.com",
-          vehicleNumber: "B 5767 EF",
-          simNumber: "SIM654321",
-          photo: "@/assets/driver2.jpg", // Ganti dengan path foto yang sesuai
-          status: "offline",
-        },
-        {
-          name: "Glen Manitik",
-          phone: "082334455667",
-          email: "glen@example.com",
-          vehicleNumber: "B 1631 DF",
-          simNumber: "SIM654321",
-          photo: "@/assets/driver2.jpg", // Ganti dengan path foto yang sesuai
-          status: "offline",
-        },
-      ],
+      drivers: [],
     };
   },
   computed: {
     filteredDrivers() {
-      if (this.searchQuery) {
-        return this.drivers.filter((driver) =>
-          driver.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-      return this.drivers;
+      return this.searchQuery
+        ? this.drivers.filter((driver) =>
+            driver.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
+        : this.drivers;
     },
   },
   methods: {
+    async fetchDrivers() {
+  try {
+    const token = localStorage.getItem("access_token"); // Ambil token dari localStorage
+
+    if (!token) {
+      throw new Error("Token tidak ditemukan, silakan login ulang.");
+    }
+
+    const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem('access_token')}`, // Tambahkan token ke header
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("API Response:", data); 
+
+    if (data && data.data && Array.isArray(data.data.drivers)) {
+      this.drivers = data.data.drivers.map(driver => ({
+        id: driver.id,
+        name: driver.name,
+        phone: driver.phone_number || "-",
+        email: driver.email,
+        vehicleNumber: driver.license_number || "-",
+        simNumber: driver.sim || "-",
+        status: driver.verified ? "online" : "offline",
+      }));
+    } else {
+      console.error("Invalid API response structure:", data);
+    }
+  } catch (error) {
+    console.error("Error fetching drivers:", error);
+  }
+},
+async deleteDriver(driver) {
+      if (!confirm(`Apakah Anda yakin ingin menghapus driver ${driver.name}?`)) {
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem("access_token");
+
+        if (!token) {
+          throw new Error("Token tidak ditemukan, silakan login ulang.");
+        }
+
+        const response = await fetch(`http://188.166.179.146:8000/api/dashboard/drivers/${driver.id}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || `Gagal menghapus driver! Status: ${response.status}`);
+        }
+
+        this.drivers = this.drivers.filter(d => d.id !== driver.id);
+        this.deleteDriverPopup.show = false;
+        this.deleteDriverPopup.driver = null;
+        alert(result.message);
+      } catch (error) {
+        console.error("Error deleting driver:", error);
+        alert(error.message || "Gagal menghapus driver. Silakan coba lagi.");
+      }
+    },
     addDriver() {
       this.drivers.push({ ...this.newDriver });
       this.resetForm();
@@ -197,9 +169,7 @@ export default {
       this.showPopup = true;
     },
     updateDriver() {
-      const index = this.drivers.findIndex(
-        (driver) => driver.email === this.newDriver.email
-      );
+      const index = this.drivers.findIndex(driver => driver.id === this.newDriver.id);
       if (index !== -1) {
         this.drivers.splice(index, 1, { ...this.newDriver });
       }
@@ -209,17 +179,12 @@ export default {
       this.deleteDriverPopup.driver = driver;
       this.deleteDriverPopup.show = true;
     },
-    deleteDriver(driver) {
-      this.drivers = this.drivers.filter((d) => d !== driver);
-      this.deleteDriverPopup.show = false;
-      this.deleteDriverPopup.driver = null;
-    },
     showBlockPopup(driver) {
       this.blockPopup.user = driver;
       this.blockPopup.show = true;
     },
-    blockUser () {
-      this.drivers = this.drivers.filter((d) => d !== this.blockPopup.user);
+    blockUser() {
+      this.drivers = this.drivers.filter(d => d.id !== this.blockPopup.user.id);
       this.blockPopup.show = false;
       this.blockPopup.user = null;
     },
@@ -230,12 +195,14 @@ export default {
         email: "",
         vehicleNumber: "",
         simNumber: "",
-        photo: "",
         status: "offline",
       };
       this.isEditing = false;
       this.showPopup = false;
     },
+  },
+  mounted() {
+    this.fetchDrivers();
   },
 };
 </script>

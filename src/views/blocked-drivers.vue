@@ -17,27 +17,26 @@
     <table class="blocked-drivers-table">
       <thead>
         <tr>
+          <th>Foto Profil</th>
           <th>Nama Driver</th>
-          <th>Nomor Kendaraan</th>
-          <th>Jumlah Keluhan</th>
-          <th>Rincian Keluhan</th>
+          <th>Email</th>
           <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(driver, index) in paginatedBlockedDrivers" :key="index">
-          <td>{{ driver.name }}</td>
-          <td>{{ driver.vehicleNumber }}</td>
-          <td>{{ driver.complaintsCount }}</td>
           <td>
-            <button @click="showComplaintDetails(driver.complaintsDetails)" class="btn-details">Lihat Rincian</button>
+            <img :src="driver.profilePicture || 'https://via.placeholder.com/50'" 
+                 alt="Profile" class="profile-img"/>
           </td>
+          <td>{{ driver.name }}</td>
+          <td>{{ driver.email }}</td>
           <td>
             <button @click="confirmUnblock(driver)" class="btn-unblock">Buka Blokir</button>
           </td>
         </tr>
         <tr v-if="!paginatedBlockedDrivers.length">
-          <td colspan="5" class="no-data">Tidak ada data yang ditemukan.</td>
+          <td colspan="4" class="no-data">Tidak ada data yang ditemukan.</td>
         </tr>
       </tbody>
     </table>
@@ -47,19 +46,6 @@
       <button @click="prevPage" :disabled="currentPage === 1" class="btn-pagination">&laquo; Prev</button>
       <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
       <button @click="nextPage" :disabled="currentPage === totalPages" class="btn-pagination">Next &raquo;</button>
-    </div>
-
-    <!-- Popup for Complaint Details -->
-    <div v-if="isPopupOpen" class="modal-overlay">
-      <div class="modal-content">
-        <h2 class="modal-title">Rincian Keluhan</h2>
-        <ul>
-          <li v-for="(detail, index) in selectedComplaintDetails" :key="index" class="complaint-item">
-            {{ index + 1 }}. {{ detail }}
-          </li>
-        </ul>
-        <button @click="closePopup" class="btn-close">Tutup</button>
-      </div>
     </div>
   </div>
 </template>
@@ -73,15 +59,7 @@ export default {
       search: "",
       currentPage: 1,
       itemsPerPage: 5,
-      isPopupOpen: false,
-      selectedComplaintDetails: [],
-      blockedDrivers: [
-        { id: 1, name: "Budi", vehicleNumber: "B1234XYZ", complaintsCount: 10, complaintsDetails: ["Terlambat datang", "Sikap kurang ramah", "Tidak mengikuti rute", "Mobil kotor", "Mengemudi ugal-ugalan", "Tidak menggunakan sabuk pengaman", "Sikap kasar", "Tidak sopan", "Mengemudi terlalu cepat", "Tidak mengikuti instruksi"] },
-        { id: 2, name: "Bambang", vehicleNumber: "B5678ABC", complaintsCount: 12, complaintsDetails: ["Sikap kasar", "Terlambat datang", "Mobil kotor", "Tidak menggunakan sabuk pengaman", "Mengemudi ugal-ugalan", "Sikap kurang ramah", "Tidak mengikuti rute", "Terlambat menjemput", "Tidak menepati janji", "Mengemudi dengan kecepatan tinggi", "Tidak memperhatikan penumpang", "Sikap tidak profesional"] },
-        { id: 3, name: "Cahyo", vehicleNumber: "B9101DEF", complaintsCount: 11, complaintsDetails: ["Sikap kurang ramah", "Terlambat datang", "Tidak mengikuti rute", "Mobil kotor", "Sikap kasar", "Tidak sopan", "Mengemudi terlalu cepat", "Tidak menggunakan sabuk pengaman", "Tidak memperhatikan penumpang", "Terlambat menjemput", "Mengemudi dengan kecepatan tinggi"] },
-        { id: 4, name: "Dedi", vehicleNumber: "B1121GHI", complaintsCount: 10, complaintsDetails: ["Sikap kasar", "Tidak mengikuti rute", "Mobil kotor", "Terlambat datang", "Sikap kurang ramah", "Tidak sopan", "Mengemudi ugal-ugalan", "Tidak menggunakan sabuk pengaman", "Mengemudi dengan kecepatan tinggi", "Tidak memperhatikan penumpang"] },
-        { id: 5, name: "Fajar", vehicleNumber: "B3141JKL", complaintsCount: 10, complaintsDetails: ["Terlambat datang", "Sikap kurang ramah", "Tidak mengikuti rute", "Mobil kotor", "Sikap kasar", "Tidak sopan", "Mengemudi terlalu cepat", "Tidak menggunakan sabuk pengaman", "Tidak memperhatikan penumpang", "Terlambat menjemput"] },
-      ],
+      blockedDrivers: [],
     };
   },
   computed: {
@@ -99,18 +77,43 @@ export default {
     },
   },
   methods: {
+    async fetchBlockedDrivers() {
+   try {
+     const token = localStorage.getItem("token") || localStorage.getItem("access_token") || ""; 
+     if (!token.trim()) {
+       console.error("Token tidak ditemukan atau kosong! Harap login ulang.");
+       return;
+     }
+
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/block", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+
+        const result = await response.json();
+        if (result.status === "Success" && result.data.block_accounts) {
+          // Mapping data API ke format yang digunakan di Vue
+          this.blockedDrivers = result.data.block_accounts.map(driver => ({
+            id: driver.id,
+            name: driver.name,
+            email: driver.email,
+            profilePicture: driver.profile_picture || "" 
+          }));
+        } else {
+          console.error("Gagal mengambil data: ", result);
+        }
+      } catch (error) {
+        console.error("Error fetching blocked drivers:", error);
+      }
+    },
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
     prevPage() {
       if (this.currentPage > 1) this.currentPage--;
-    },
-    showComplaintDetails(complaints) {
-      this.selectedComplaintDetails = complaints;
-      this.isPopupOpen = true;
-    },
-    closePopup() {
-      this.isPopupOpen = false;
     },
     confirmUnblock(driver) {
       Swal.fire({
@@ -141,8 +144,12 @@ export default {
       this.$router.push('/data'); 
     },
   },
+  mounted() {
+    this.fetchBlockedDrivers();
+  },
 };
 </script>
+
 
 <style scoped>
 .blocked-drivers-container {
