@@ -118,10 +118,6 @@
       <!-- Grafik -->
       <div class="charts-container">
         <div class="chart">
-          <h3>Pengguna Aktif</h3>
-          <canvas id="activeUsersChart"></canvas>
-        </div>
-        <div class="chart">
           <h3>Pengemudi Aktif</h3>
           <canvas id="activeDriversChart"></canvas>
         </div>
@@ -129,9 +125,6 @@
 
       <!-- Tombol Navigasi -->
       <div class="buttons-container">
-        <router-link to="/ActiveUser" class="btn">
-          Lihat Daftar Pengguna Aktif
-        </router-link>
         <router-link to="/ActiveDriver" class="btn">
           Lihat Daftar Pengemudi Aktif
         </router-link>

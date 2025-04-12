@@ -147,7 +147,7 @@
       </section>
 
       <div class="details-card" style="height: 300px">
-        <h3 style="font-size: 14px">Grafik Pengguna Aktif</h3>
+        <h3 style="font-size: 14px">Grafik Pengemudi Aktif</h3>
         <canvas id="activeUsersChart" style="max-height: 250px"></canvas>
       </div>
 
