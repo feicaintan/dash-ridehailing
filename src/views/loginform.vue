@@ -43,7 +43,6 @@
                 </button>
               </div>
             </div>
-            <a href="#" class="forgot-password">Lupa password?</a>
             <button type="submit" class="login-button" @click="handleLogin">Masuk</button>
           </form>
           <div v-if="showToast" class="toast" @animationend="showToast = false">

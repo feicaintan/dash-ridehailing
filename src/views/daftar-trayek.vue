@@ -14,24 +14,24 @@
         />
       </div>
 
-      <div class="table-container">
+      <div v-if="loading" class="loading">Loading data...</div>
+      <div v-else class="table-container">
         <table class="data-table">
           <thead>
             <tr>
               <th>Nomor Trayek</th>
               <th>Jalur</th>
-              <th>Jalan</th>
+              <th>Tarif</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="route in paginatedRoutes" :key="route.routeNumber">
-              <td>{{ route.routeNumber }}</td>
-              <td>{{ route.routeLine }}</td>
-              <td>{{ route.routeStreet }}</td>
+            <tr v-for="(route, index) in paginatedRoutes" :key="route.ID || index">
+              <td>{{ route.ID }}</td>
+              <td>{{ route.RouteName }}</td>
+              <td>{{ route.Amount }}</td>
               <td>
-                <button class="edit-button" @click="editRoute(route)">Edit</button>
-                <button class="delete-button" @click="deleteRoute(route)">Delete</button>
+                <button class="delete-button" @click="deleteRoute(route)">Hapus</button>
               </td>
             </tr>
             <tr v-if="paginatedRoutes.length === 0">
@@ -41,10 +41,8 @@
         </table>
       </div>
 
-      <!-- Tombol Tambah Trayek -->
       <button class="add-route-button" @click="showAddRoutePopup">Tambah Trayek</button>
 
-      <!-- Pagination Controls -->
       <div class="pagination-container">
         <button :disabled="currentPage === 1" @click="prevPage" class="pagination-button">Back</button>
         <span>Page {{ currentPage }} of {{ totalPages }}</span>
@@ -52,22 +50,17 @@
       </div>
     </div>
 
-    <!-- Popup Tambah Trayek -->
     <div v-if="isAddRoutePopupOpen" class="popup-overlay">
       <div class="popup">
         <h2>Tambah Trayek</h2>
         <form @submit.prevent="addRoute">
           <div class="form-group">
-            <label>Nomor Trayek</label>
-            <input type="text" v-model="newRoute.routeNumber" required />
-          </div>
-          <div class="form-group">
             <label>Jalur</label>
-            <input type="text" v-model="newRoute.routeLine" required />
+            <input type="text" v-model="newRoute.RouteName" required />
           </div>
           <div class="form-group">
-            <label>Jalan</label>
-            <input type="text" v-model="newRoute.routeStreet" required />
+            <label>Tarif</label>
+            <input type="number" v-model="newRoute.Amount" required />
           </div>
           <div class="popup-buttons">
             <button class="submit-button" type="submit">Simpan</button>
@@ -89,86 +82,237 @@ export default {
       searchQuery: "",
       currentPage: 1,
       itemsPerPage: 10,
-      routes: [
-        { routeNumber: "001", routeLine: "Terminal Malalayang - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "002", routeLine: "Terminal Malalayang - Terminal Karombasan", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "003", routeLine: "Terminal Karombasan - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "004", routeLine: "Terminal Karombasan - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "005", routeLine: "Winangun - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "006", routeLine: "Terminal Karombasan - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "007", routeLine: "Terminal Karombasan - Terminal Paal 2", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "008", routeLine: "Terminal Paal 2 - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "009", routeLine: "Kairagi - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "010", routeLine: "Perkamil - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "011", routeLine: "Banjer, Paal 4, Taas - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "012", routeLine: "Wonasa - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "013", routeLine: "Tuminting - Pusat Kota", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "014", routeLine: "Terminal Paal 2 - Lapangan", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "015", routeLine: "Terminal Paal 2 - Politeknik", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "016", routeLine: "Tuminting - Pandu", routeStreet: "Jalan Merdeka" },
-        { routeNumber: "017", routeLine: "Tuminting - Tongkaina", routeStreet: "Jalan Merdeka" },
-      ],
+      routes: [],
+      loading: true,
       newRoute: {
-        routeNumber: "",
-        routeLine: "",
-        routeStreet: "",
+        RouteName: "",
+        Amount: 0
       },
-      isAddRoutePopupOpen: false,
+      isAddRoutePopupOpen: false
     };
   },
   computed: {
     filteredRoutes() {
+      if (!this.routes) return [];
       return this.routes.filter(route => {
+        if (!route) return false;
+        const searchLower = this.searchQuery.toLowerCase();
+        const idString = route.ID ? route.ID.toString() : "";
         return (
-          route.routeNumber.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          route.routeLine.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          route.routeStreet.toLowerCase().includes(this.searchQuery.toLowerCase())
+          idString.includes(searchLower) ||
+          (route.RouteName && route.RouteName.toLowerCase().includes(searchLower)) ||
+          (route.Amount && route.Amount.toString().toLowerCase().includes(searchLower))
         );
       });
     },
     paginatedRoutes() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
-      return this.filteredRoutes.slice(start, start + this.itemsPerPage);
+      const end = start + this.itemsPerPage;
+      return this.filteredRoutes.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.filteredRoutes.length / this.itemsPerPage);
+      return this.filteredRoutes.length > 0
+        ? Math.ceil(this.filteredRoutes.length / this.itemsPerPage)
+        : 1;
     }
   },
+  created() {
+    this.fetchRoutes();
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeDestroy() {
+    window.removeEventListener('storage', this.handleStorageChange);
+  },
   methods: {
+    getAccessToken() {
+      try {
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Access token tidak ditemukan. Silakan login kembali.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            this.$router.push('/login');
+          });
+          return null;
+        }
+        return accessToken;
+      } catch (error) {
+        console.error('Error getting access token:', error);
+        return null;
+      }
+    },
+
+    fetchRoutes() {
+      this.loading = true;
+      const accessToken = this.getAccessToken();
+      if (!accessToken) {
+        this.loading = false;
+        return Promise.resolve();
+      }
+
+      return fetch(`http://188.166.179.146:8000/api/dashboard/routeS?t=${Date.now()}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.removeItem('access_token');
+              this.$router.push('/login');
+              throw new Error('Sesi anda telah berakhir. Silakan login kembali.');
+            }
+            throw new Error(`Network response was not ok: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          this.routes = Array.isArray(data.data) ? data.data : [];
+        })
+        .catch(error => {
+          console.error('Error fetching routes:', error);
+          this.routes = [];
+          Swal.fire({
+            title: 'Error!',
+            text: 'Gagal mengambil data trayek. Silakan coba lagi nanti.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+
     prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
+      if (this.currentPage > 1) this.currentPage--;
     },
+
     nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
+      if (this.currentPage < this.totalPages) this.currentPage++;
     },
+
     showAddRoutePopup() {
       this.isAddRoutePopupOpen = true;
     },
+
     closeAddRoutePopup() {
       this.isAddRoutePopupOpen = false;
-    },
-    addRoute() {
-      this.routes.push({ ...this.newRoute });
       this.newRoute = {
-        routeNumber: "",
-        routeLine: "",
-        routeStreet: "",
+        RouteName: "",
+        Amount: 0
       };
-      this.closeAddRoutePopup();
-      Swal.fire({
-        title: 'Trayek Berhasil Ditambah!',
-        text: 'Trayek baru telah berhasil ditambahkan.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
     },
+
+    addRoute() {
+      const accessToken = this.getAccessToken();
+      if (!accessToken) return;
+
+      fetch('http://188.166.179.146:8000/api/dashboard/route', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.newRoute)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.status === "Success") {
+            Swal.fire({
+              title: 'Trayek Berhasil Ditambah!',
+              text: 'Trayek baru telah berhasil ditambahkan.',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+
+            this.fetchRoutes().then(() => {
+              this.currentPage = 1;
+              this.closeAddRoutePopup();
+            });
+          } else {
+            throw new Error('Failed to add route: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error adding route:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Gagal menambahkan trayek. Silakan coba lagi nanti.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
+    },
+
+    deleteRoute(route) {
+      if (!route || !route.ID) return;
+
+      Swal.fire({
+        title: 'Hapus Trayek?',
+        text: `Apakah Anda yakin ingin menghapus trayek "${route.RouteName}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const accessToken = this.getAccessToken();
+          if (!accessToken) return;
+
+          fetch(`http://188.166.179.146:8000/api/dashboard/route/${route.ID}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (data.status === "Success" || data.status === 200 || data.success) {
+                Swal.fire({
+                  title: 'Berhasil!',
+                  text: 'Trayek berhasil dihapus.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                });
+                this.fetchRoutes();
+              } else {
+                throw new Error('Gagal menghapus trayek');
+              }
+            })
+            .catch(error => {
+              console.error('Error deleting route:', error);
+              this.fetchRoutes();
+              Swal.fire({
+                title: 'Error!',
+                text: 'Gagal menghapus trayek. Silakan coba lagi nanti.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            });
+        }
+      });
+    }
   }
 };
 </script>
+
 
 <style scoped>
 /* General Container Styling */

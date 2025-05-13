@@ -52,17 +52,17 @@
           </li>
 
           <li>
-            <router-link to="/report" class="menu-item" :class="{ active: activeMenu === 'report' }"
-              @click="setActiveMenu('report')">
-              <img src="@/assets/complaint.png" alt="Logo Keluhan/Blokir" class="button-image inline" />
-              Keluhan/Blokir
+            <router-link to="/tarifruteGov" class="menu-item" :class="{ active: activeMenu === 'tarifruteGov' }"
+              @click="setActiveMenu('tarifruteGov')">
+              <img src="@/assets/tarif.png" alt="Logo Keluhan/Blokir" class="button-image inline" />
+              Tarif Rute
             </router-link>
           </li>
 
         </ul>
       </nav>
       <hr class="divider" />
-        <router-link to="/" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
+      <router-link to="/loginform" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
           <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
           Login as Admin
         </router-link>
@@ -74,112 +74,63 @@
         <h2>Laporan dan Analisis</h2>
       </div>
 
-      <!-- Laporan Kinerja Umum -->
-      <section class="report-section">
-        <h3>Laporan Kinerja Umum</h3>
-        <!-- Tampilkan Hari Data (tanggal hari ini) -->
-        <div class="data-date">
-          <p>Hari Data: {{ timeDisplay }}</p>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Nilai</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Total Pengguna</td>
-              <td>1,500</td>
-            </tr>
-            <tr>
-              <td>Total Driver</td>
-              <td>300</td>
-            </tr>
-            <tr>
-              <td>Total Perjalanan</td>
-              <td>5,000</td>
-            </tr>
-            <tr>
-              <td>Total Pendapatan</td>
-              <td>Rp 50,000,000</td>
-            </tr>
-          </tbody>
-        </table>
-        <button @click="viewLast3MonthsGeneralReport">Lihat Laporan 3 Bulan Terakhir</button>
-      </section>
+    <!-- Laporan Kinerja Bulan Ini -->
+    <section class="report-section">
+      <h3>Laporan Kinerja Bulan Ini</h3>
+      <div class="data-date">
+        <p>Bulan Data: {{ monthDisplay }}</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Nilai</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Total Pengguna</td>
+            <td>{{ reportData.common.total_passenger }}</td>
+          </tr>
+          <tr>
+            <td>Total Driver</td>
+            <td>{{ reportData.common.total_driver }}</td>
+          </tr>
+          <tr>
+            <td>Total Perjalanan</td>
+            <td>{{ reportData.common.total_trip }}</td>
+          </tr>
+          <tr>
+            <td>Total Pendapatan</td>
+            <td>Rp {{ formatRupiah(reportData.common.total_revenue) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-      <!-- Laporan Penggunaan Rute -->
-      <section class="report-section">
-        <h3>Laporan Penggunaan Rute</h3>
-        <!-- Tampilkan Hari Data untuk Laporan Penggunaan Rute -->
-        <div class="data-date">
-          <p>Hari Data: {{ timeDisplay }}</p>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Rute</th>
-              <th>Jumlah Perjalanan</th>
-              <th>Pendapatan</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Rute 001</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 002</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 003</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 004</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 005</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 005</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 006</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 007</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 008</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute 009</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
-            </tr>
-          </tbody>
-        </table>
-        <button @click="viewLast3MonthsRouteReport">Lihat Laporan 3 Bulan Terakhir</button>
-      </section>
+    <!-- Laporan Penggunaan Rute Bulan Ini -->
+    <section class="report-section">
+      <h3>Laporan Penggunaan Rute Bulan Ini</h3>
+      <div class="data-date">
+        <p>Bulan Data: {{ monthDisplay }}</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Rute</th>
+            <th>Jumlah Perjalanan</th>
+            <th>Pendapatan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="trip in reportData.trips" :key="trip.route">
+            <td>{{ trip.route }}</td>
+            <td>{{ trip.total }}</td>
+            <td>Rp {{ formatRupiah(trip.revenue) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
       <!-- Tombol Unduh Laporan -->
       <section class="download-section">
@@ -251,53 +202,58 @@ export default {
   data() {
     return {
       currentDate: new Date(),
-      activeMenu: ""
+      reportData: {
+        common: {
+          total_passenger: 0,
+          total_driver: 0,
+          total_trip: 0,
+          total_revenue: 0
+        },
+        trips: []
+      }
     };
   },
   computed: {
-    // Menampilkan tanggal hari ini dengan format: 10 Oktober 2025
-    timeDisplay() {
-      const options = { day: "numeric", month: "long", year: "numeric" };
+    monthDisplay() {
+      const options = { month: "long", year: "numeric" };
       return this.currentDate.toLocaleDateString("id-ID", options);
     }
   },
   methods: {
-    viewLast3MonthsGeneralReport() {
-    // Logika untuk mengambil dan menampilkan data laporan kinerja umum 3 bulan terakhir
-    console.log("Melihat Laporan Kinerja Umum 3 Bulan Terakhir");
-    // Anda dapat menambahkan logika untuk mengambil data dari API atau sumber data lainnya di sini
-  },
-  viewLast3MonthsRouteReport() {
-    // Logika untuk mengambil dan menampilkan data laporan penggunaan rute 3 bulan terakhir
-    console.log("Melihat Laporan Penggunaan Rute 3 Bulan Terakhir");
-    // Anda dapat menambahkan logika untuk mengambil data dari API atau sumber data lainnya di sini
-  },
-    downloadReport() {
-      // Menampilkan elemen untuk tampilan cetak
-      const printableArea = document.getElementById("printableArea");
-      printableArea.style.display = "block";
-      window.print();
-      printableArea.style.display = "none"; // Menyembunyikan kembali setelah cetak
+    fetchMonthlyReport() {
+      const currentMonth = this.currentDate.getMonth() + 1;
+      const url = `http://188.166.179.146:8000/api/dashboard/reports?month=${currentMonth}`;
+
+      const token = localStorage.getItem("access_token");
+
+      fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.data) {
+            this.reportData = data.data;
+          }
+        })
+        .catch(error => {
+          console.error("Gagal mengambil data laporan:", error);
+        });
     },
-    showWeeklyData() {
-      // Logika untuk menampilkan data perminggu untuk Laporan Kinerja Umum
-      alert("Menampilkan data perminggu untuk kinerja umum");
-    },
-    showMonthlyData() {
-      // Logika untuk menampilkan data perbulan untuk Laporan Kinerja Umum
-      alert("Menampilkan data perbulan untuk kinerja umum");
-    },
-    showWeeklyDataForRoutes() {
-      // Logika untuk menampilkan data perminggu untuk Laporan Penggunaan Rute
-      alert("Menampilkan data perminggu untuk penggunaan rute");
-    },
-    showMonthlyDataForRoutes() {
-      // Logika untuk menampilkan data perbulan untuk Laporan Penggunaan Rute
-      alert("Menampilkan data perbulan untuk penggunaan rute");
-    },
-    setActiveMenu(menu) {
-      this.activeMenu = menu;
+    formatRupiah(value) {
+      return value.toLocaleString("id-ID");
     }
+  },
+  mounted() {
+    this.fetchMonthlyReport();
   }
 };
 </script>

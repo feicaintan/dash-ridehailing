@@ -3,8 +3,13 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h1 class="logo">Ride-Hailing
-          <img src="@/assets/logoridehailing.png" alt="Logo Ride-Hailing" class="logo-image inline" />
+        <h1 class="logo">
+          Ride-Hailing
+          <img
+            src="@/assets/logoridehailing.png"
+            alt="Logo Ride-Hailing"
+            class="logo-image inline"
+          />
         </h1>
         <p class="tagline">"Yuk, Jelajahi Mikrolet dengan Lebih Mudah!"</p>
       </div>
@@ -12,16 +17,32 @@
         <h3 class="menu-title">MENU</h3>
         <ul>
           <li>
-            <router-link to="/govdash" class="menu-item active" :class="{ active: activeMenu === 'govdash' }"
-              @click="setActiveMenu('govdash')">
-              <img src="@/assets/dash.png" alt="Logo Dashboard" class="button-image inline" />
+            <router-link
+              to="/govdash"
+              class="menu-item active"
+              :class="{ active: activeMenu === 'govdash' }"
+              @click="setActiveMenu('govdash')"
+            >
+              <img
+                src="@/assets/dash.png"
+                alt="Logo Dashboard"
+                class="button-image inline"
+              />
               Dashboard
             </router-link>
           </li>
           <li>
-            <router-link to="/management" class="menu-item" :class="{ active: activeMenu === 'management' }"
-              @click="setActiveMenu('management')">
-              <img src="@/assets/management.png" alt="Logo Manajemen Kebijakan" class="button-image inline" />
+            <router-link
+              to="/management"
+              class="menu-item"
+              :class="{ active: activeMenu === 'management' }"
+              @click="setActiveMenu('management')"
+            >
+              <img
+                src="@/assets/management.png"
+                alt="Logo Manajemen Kebijakan"
+                class="button-image inline"
+              />
               Manajemen Kebijakan
             </router-link>
           </li>
@@ -43,84 +64,96 @@
           </li>
 
           <li>
-            <router-link to="/analysis" class="menu-item" :class="{ active: activeMenu === 'analysis' }"
-              @click="setActiveMenu('analysis')">
-              <img src="@/assets/anlysis.png" alt="Logo Analysis" class="button-image inline" />
+            <router-link
+              to="/analysis"
+              class="menu-item"
+              :class="{ active: activeMenu === 'analysis' }"
+              @click="setActiveMenu('analysis')"
+            >
+              <img
+                src="@/assets/anlysis.png"
+                alt="Logo Analysis"
+                class="button-image inline"
+              />
               Laporan & Analisis
             </router-link>
           </li>
           <li>
-            <router-link to="/report" class="menu-item" :class="{ active: activeMenu === 'report' }"
-              @click="setActiveMenu('report')">
-              <img src="@/assets/complaint.png" alt="Logo Keluhan/Blokir" class="button-image inline" />
-              Keluhan/Blokir
+            <router-link
+              to="/tarifruteGov"
+              class="menu-item"
+              :class="{ active: activeMenu === 'tarifruteGov' }"
+              @click="setActiveMenu('tarifruteGov')"
+            >
+              <img
+                src="@/assets/tarif.png"
+                alt="Logo Keluhan/Blokir"
+                class="button-image inline"
+              />
+              Tarif Rute
             </router-link>
           </li>
         </ul>
       </nav>
       <hr class="divider" />
-        <router-link to="/loginform" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
-          <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
-          Login as Admin
-        </router-link>
+      <router-link
+        to="/loginform"
+        class="menu-item"
+        :class="{ active: activeMenu === 'home' }"
+        @click="setActiveMenu('home')"
+      >
+        <img
+          src="@/assets/quit.png"
+          alt="Logo Quit"
+          class="button-image inline"
+        />
+        Login as Admin
+      </router-link>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="dashboard-header">
-        <h2>Welcome back, <strong>Government~</strong></h2>
-        <p>Glad to see you again!</p>
-      </header>
+<!-- Main Content -->
+<main class="main-content">
+    <header class="dashboard-header">
+      <h2>Welcome back, <strong>Government~</strong></h2>
+      <p>Glad to see you again!</p>
+    </header>
 
-      <section class="overview">
-        <div class="overview-card">
-          <div class="text-container">
-            <p>+ Pengguna Terdaftar</p>
-            <h3>1,975 <span class="growth">+3%</span></h3>
-            <img
-              src="@/assets/userplus.png"
-              alt="Logo UserPlus"
-              class="logo-image"
-            />
-          </div>
-        </div>
-
-        <div class="overview-card">
-          <p>+ Pengemudi Terdaftar</p>
-          <h3>41 <span class="growth">+5%</span></h3>
+    <section class="overview">
+      <div class="overview-card">
+        <div class="text-container">
+          <p>+ Pengguna Terdaftar</p>
+          <h3>{{ stats.users }} <span class="growth">+3%</span></h3>
           <img
-            src="@/assets/driverplus.png"
-            alt="Logo DriverPlus"
-            class="logo-image-section"
+            src="@/assets/userplus.png"
+            alt="Logo UserPlus"
+            class="logo-image"
           />
         </div>
-        <div class="overview-card">
-          <p>Trayek Terdaftar</p>
-          <h3>17</h3>
-          <img
-            src="@/assets/trayek.png"
-            alt="Logo DriverPlus"
-            class="logo-image-section"
-          />
-        </div>
-      </section>
-
-      <div class="details-card" style="height: 300px">
-        <h3 style="font-size: 14px">Grafik Pengguna Aktif</h3>
-        <canvas id="activeUsersChart" style="max-height: 250px"></canvas>
       </div>
 
-      <div class="details-card" style="height: 300px">
-        <h3 style="font-size: 14px">Distribusi Pendapatan</h3>
-        <canvas
-          id="revenueDistributionChart"
-          style="max-height: 250px"
-        ></canvas>
+      <div class="overview-card">
+        <p>+ Pengemudi Terdaftar</p>
+        <h3>{{ stats.drivers }} <span class="growth">+5%</span></h3>
+        <img
+          src="@/assets/driverplus.png"
+          alt="Logo DriverPlus"
+          class="logo-image-section"
+        />
       </div>
+      <div class="overview-card">
+        <p>Total Rute</p>
+        <h3>{{ stats.routes }}</h3>
+        <img
+          src="@/assets/trayek.png"
+          alt="Logo DriverPlus"
+          class="logo-image-section"
+        />
+      </div>
+    </section>
 
       <div class="details-card" style="height: 300px">
-        <h3>Aktivitas Pengemudi</h3>
-        <canvas id="driverActivityChart"></canvas>
+        <h3 style="font-size: 14px">Grafik Rata-rata Umur Penumpang</h3>
+        <canvas id="passengerAgeChart" style="max-height: 250px"></canvas>
       </div>
 
       <div class="details-card" style="height: 400px">
@@ -134,76 +167,44 @@
             <span>Daftar Pengemudi</span>
           </h3>
           <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Samuel</td>
-                <td class="status offline">Offline</td>
-              </tr>
-              <tr>
-                <td>Kevin</td>
-                <td class="status online">Online</td>
-              </tr>
-              <tr>
-                <td>Glen</td>
-                <td class="status offline">Offline</td>
-              </tr>
-              <tr>
-                <td>Jaka</td>
-                <td class="status online">Online</td>
-              </tr>
-              <tr>
-                <td>Okta</td>
-                <td class="status offline">Offline</td>
-              </tr>
-              <tr>
-                <td>Kyrios</td>
-                <td class="status online">Online</td>
-              </tr>
-              <tr>
-                <td>Rivel</td>
-                <td class="status online">Online</td>
-              </tr>
-            </tbody>
-          </table>
+  <thead>
+    <tr><th>Nama</th><th>Email</th></tr>
+  </thead>
+  <tbody>
+    <tr v-for="driver in driversList.slice(0, 5)" :key="driver.id">
+      <td>{{ driver.name }}</td>
+      <td>{{ driver.email }}</td>
+    </tr>
+  </tbody>
+</table>
+
           <router-link
             to="/driverGov"
             class="more-item"
-            :class="{ active: activeMenu === 'DaftarDriver' }"
-            @click="setActiveMenu('DaftarDriver')"
+            :class="{ active: activeMenu === 'driverGov' }"
+            @click="setActiveMenu('driverGov')"
           >
             Selengkapnya &raquo;
           </router-link>
         </div>
 
         <div class="details-card">
-          <h3>Analisis Penumpang (10 Hari)</h3>
-          <canvas id="passengerChart"></canvas>
-        </div>
-
-        <div class="details-card">
-          <h2 class="review-title">Ulasan/Rating</h2>
-          <ul class="review-list">
-            <li class="review-item" v-for="review in reviews" :key="review.id">
-              <div class="profile-pic">
-                <img :src="review.profilePicture" :alt="review.name" />
-              </div>
-              <div class="review-content">
-                <p class="name">{{ review.name }}</p>
-                <p class="rating">
-                  ({{ review.rating }}/5) {{ review.comment }}
-                  <span class="emoji">👍</span>
-                </p>
-              </div>
-              <p class="time">{{ review.time }}</p>
-            </li>
-          </ul>
-        </div>
+  <h2 class="review-title">Ulasan/Rating</h2>
+  <ul class="review-list">
+    <li class="review-item" v-for="review in reviews.slice(0, 6)" :key="review.id">
+      <div class="profile-pic">
+        <img :src="review.profilePicture" :alt="review.name" />
+      </div>
+      <div class="review-content">
+        <p class="name">{{ review.name }}</p>
+        <p class="rating">
+          ({{ review.rating }}/5) {{ review.comment }}
+        </p>
+      </div>
+      <p class="time">{{ review.time }}</p>
+    </li>
+  </ul>
+</div>
       </section>
     </main>
   </div>
@@ -211,193 +212,168 @@
 
 <script>
 import Chart from "chart.js/auto";
+import * as L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
 export default {
   name: "AdminData",
-  mounted() {
-    this.initChart();
-    this.initActiveUsersChart();
-    this.initRevenueDistributionChart();
-    this.initDriverActivityChart();
-    this.initTrafficMap();
-  },
   data() {
     return {
-      mapCenter: [1.4748, 124.8421], // Manado coordinates
+      stats: {
+        users: 0,
+        drivers: 0,
+        routes: 0,
+      },
+      mapCenter: [1.4748, 124.8421],
       trafficDensity: {
         "Trayek Manado-Kawangkaren": "Padat",
         "Trayek Pusat Kota": "Sedang",
         "Trayek Pinggiran": "Lancar",
       },
       activeDrivers: [
-        {
-          id: 1,
-          name: "Daniel",
-          location: [1.4748, 124.8421],
-          status: "online",
-        },
-        { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
-        {
-          id: 1,
-          name: "Daniel",
-          location: [1.4748, 124.8421],
-          status: "online",
-        },
-        { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
-        {
-          id: 1,
-          name: "Daniel",
-          location: [1.4748, 124.8421],
-          status: "online",
-        },
-        { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
-        {
-          id: 1,
-          name: "Daniel",
-          location: [1.4748, 124.8421],
-          status: "online",
-        },
+        { id: 1, name: "Daniel", location: [1.4748, 124.8421], status: "online" },
         { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
       ],
+      driversList: [],
       activeMenu: "admin-dash",
-      contentSections: [
-        {
-          title: "Daftar Pengemudi",
-          content: `
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Samuel</td>
-                  <td class="status offline">Offline</td>
-                </tr>
-                <tr>
-                  <td>Daniel</td>
-                  <td class="status online">Online</td>
-                </tr>
-              </tbody>
-            </table>`,
-        },
-      ],
-      reviews: [
-        {
-          id: 1,
-          name: "Travis",
-          profilePicture: "@/assets/profile1.jpg",
-          rating: 4,
-          comment: "Nice",
-          time: "15:56",
-        },
-        {
-          id: 2,
-          name: "John",
-          profilePicture: "@/assets/profile2.jpg",
-          rating: 3,
-          comment: "Good",
-          time: "15:56",
-        },
-        {
-          id: 3,
-          name: "Kevin",
-          profilePicture: "@/assets/profile3.jpg",
-          rating: 5,
-          comment: "Mantappu",
-          time: "15:56",
-        },
-        {
-          id: 4,
-          name: "Arthur",
-          profilePicture: "@/assets/profile4.jpg",
-          rating: 4,
-          comment: "Kerenn",
-          time: "15:56",
-        },
-        {
-          id: 5,
-          name: "Justin",
-          profilePicture: "@/assets/profile5.jpg",
-          rating: 4,
-          comment: "👍👍👍",
-          time: "15:56",
-        },
-        {
-          id: 6,
-          name: "Newton",
-          profilePicture: "@/assets/profile6.jpg",
-          rating: 5,
-          comment: "👍👍",
-          time: "15:56",
-        },
-      ],
-      filteredContent: [], // Data yang difilter berdasarkan pencarian
+      reviews: [],
+      passengerAgeData: {
+        labels: [],
+        values: [],
+      },
     };
   },
+  mounted() {
+    this.fetchDashboardStats();
+    this.fetchPassengerAgeData()
+    this.initTrafficMap();
+  },
   methods: {
-    initDriverActivityChart() {
-      const ctx = document
-        .getElementById("driverActivityChart")
-        .getContext("2d");
-      new Chart(ctx, {
+    async fetchPassengerAgeData() {
+      const token = localStorage.getItem("access_token");
+      if (!token) return console.error("Token tidak ditemukan di localStorage (access_token)");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+          method: "GET",
+          headers,
+        });
+        const result = await response.json();
+
+        if (result.data?.users) {
+          const ageGroups = this.processAgeData(result.data.users);
+          this.passengerAgeData.labels = Object.keys(ageGroups);
+          this.passengerAgeData.values = Object.values(ageGroups);
+        }
+
+        this.initPassengerAgeChart();
+      } catch (err) {
+        console.error("Gagal mengambil data umur penumpang:", err);
+        this.initPassengerAgeChart();
+      }
+    },
+
+    processAgeData(users) {
+  const ageGroups = {
+    "< 18": 0,
+    "18-24": 0,
+    "25-34": 0,
+    "35-44": 0,
+    "45-54": 0,
+    "55+": 0,
+  };
+
+
+  const today = new Date();
+
+  users.forEach((user) => {
+    if (!user.date_of_birth) return;
+
+    const dob = new Date(user.date_of_birth);
+    if (isNaN(dob)) return;
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
+    }
+
+    if (age < 18) ageGroups["< 18"]++;
+    else if (age < 25) ageGroups["18-24"]++;
+    else if (age < 35) ageGroups["25-34"]++;
+    else if (age < 45) ageGroups["35-44"]++;
+    else if (age < 55) ageGroups["45-54"]++;
+    else ageGroups["55+"]++;
+  });
+
+  return ageGroups;
+},
+
+    initPassengerAgeChart() {
+      const canvas = document.getElementById("passengerAgeChart");
+      if (!canvas) return;
+
+      if (this.passengerAgeData.labels.length === 0) {
+        const ctx = canvas.getContext("2d");
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#666";
+        ctx.textAlign = "center";
+        ctx.fillText("Tidak ada data umur penumpang tersedia", canvas.width / 2, canvas.height / 2);
+        return;
+      }
+
+      new Chart(canvas.getContext("2d"), {
         type: "bar",
         data: {
-          labels: [
-            "Trayek 01",
-            "Trayek 02",
-            "Trayek 03",
-            "Trayek 04",
-            "Trayek 05",
-            "Trayek 06",
-            "Trayek 07",
-            "Trayek 08",
-            "Trayek 09",
-            "Trayek 10",
-            "Trayek 11",
-            "Trayek 12",
-            "Trayek 13",
-            "Trayek 14",
-            "Trayek 15",
-            "Trayek 16",
-            "Trayek 17",
-          ],
-          datasets: [
-            {
-              label: "Jumlah Perjalanan",
-              data: [
-                120, 95, 85, 110, 75, 65, 100, 90, 80, 105, 70, 85, 95, 60, 115,
-                50, 40,
-              ],
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-            },
-          ],
+          labels: this.passengerAgeData.labels,
+          datasets: [{
+            label: "Jumlah Penumpang",
+            data: this.passengerAgeData.values,
+            backgroundColor: "rgba(54, 162, 235, 0.7)",
+            borderColor: "rgba(54, 162, 235, 1)",
+            borderWidth: 1,
+          }],
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             title: {
               display: true,
-              text: "Aktivitas Pengemudi per Trayek",
+              text: "Distribusi Umur Penumpang",
             },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+            },
+            legend: { display: false },
           },
           scales: {
             y: {
               beginAtZero: true,
-              title: {
-                display: true,
-                text: "Jumlah Perjalanan",
-              },
+              title: { display: true, text: "Jumlah Penumpang" },
+            },
+            x: {
+              title: { display: true, text: "Kelompok Umur" },
             },
           },
         },
       });
     },
+ 
+
     initTrafficMap() {
+      if (typeof L === "undefined") {
+        console.error("Leaflet tidak ditemukan");
+        return;
+      }
+
       const map = L.map("trafficMap").setView(this.mapCenter, 11);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -405,211 +381,103 @@ export default {
       }).addTo(map);
 
       Object.entries(this.trafficDensity).forEach(([route, density]) => {
-        const color =
-          density === "Padat"
-            ? "red"
-            : density === "Sedang"
-            ? "orange"
-            : "green";
+        const color = density === "Padat" ? "red" : density === "Sedang" ? "orange" : "green";
 
         L.circle(this.mapCenter, {
-          color: color,
+          color,
           fillColor: color,
           fillOpacity: 0.3,
           radius: 1500,
-        })
-          .bindPopup(`${route}: ${density}`)
-          .addTo(map);
+        }).bindPopup(`${route}: ${density}`).addTo(map);
       });
 
       this.activeDrivers.forEach((driver) => {
-        const driverIcon = L.divIcon({
+        const icon = L.divIcon({
           className: "driver-marker",
-          html: `<div style="background-color: ${
-            driver.status === "online" ? "green" : "red"
-          }; 
-                  width: 20px; height: 20px; border-radius: 50%;"></div>`,
+          html: `<div style="background-color: ${driver.status === "online" ? "green" : "red"}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
           iconSize: [20, 20],
         });
 
-        L.marker(driver.location, { icon: driverIcon })
-          .bindPopup(`${driver.name} - Status: ${driver.status}`)
-          .addTo(map);
+        L.marker(driver.location, { icon }).bindPopup(`${driver.name} - Status: ${driver.status}`).addTo(map);
       });
     },
 
-    initRevenueDistributionChart() {
-      const ctx = document
-        .getElementById("revenueDistributionChart")
-        .getContext("2d");
-      new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: [
-            "Trayek 01",
-            "Trayek 02",
-            "Trayek 03",
-            "Trayek 04",
-            "Trayek 05",
-            "Trayek 06",
-            "Trayek 07",
-            "Trayek 08",
-            "Trayek 09",
-            "Trayek 10",
-            "Trayek 11",
-            "Trayek 12",
-            "Trayek 13",
-            "Trayek 14",
-            "Trayek 15",
-            "Trayek 16",
-            "Trayek 17",
-          ],
-          datasets: [
-            {
-              data: [12, 15, 8, 10, 7, 6, 9, 11, 5, 13, 4, 7, 6, 8, 5, 3, 2],
-              backgroundColor: [
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-              ],
-              hoverBackgroundColor: [
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-              ],
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: "Distribusi Pendapatan per Trayek",
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  let value = context.parsed;
-                  let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                  let percentage = ((value / total) * 100).toFixed(1);
-                  return `${context.label}: ${value}% (${percentage}%)`;
-                },
-              },
-            },
-          },
-        },
-      });
+    async fetchDashboardStats() {
+      const token = localStorage.getItem("access_token");
+      if (!token) return console.error("Token tidak ditemukan di localStorage (access_token)");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      await this.fetchUsers(headers);
+      await this.fetchDrivers(headers);
+      await this.fetchRoutes(headers);
+      await this.fetchDriversList(headers);
+      await this.fetchReviews(headers);
     },
-    initActiveUsersChart() {
-      const ctx = document.getElementById("activeUsersChart").getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-          datasets: [
-            {
-              label: "Harian",
-              data: [120, 190, 150, 220, 240, 280, 200],
-              borderColor: "rgba(54, 162, 235, 1)",
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
-              tension: 0.4,
-              fill: true,
-            },
-            {
-              label: "Mingguan",
-              data: [800, 850, 900, 950, 1000, 1050, 1100],
-              borderColor: "rgba(255, 99, 132, 1)",
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              tension: 0.4,
-              fill: true,
-            },
-            {
-              label: "Bulanan",
-              data: [3500, 3700, 3900, 4100, 4300, 4500, 4700],
-              borderColor: "rgba(75, 192, 192, 1)",
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              tension: 0.4,
-              fill: true,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: "Grafik Pengguna Aktif",
-            },
-            tooltip: {
-              mode: "index",
-              intersect: false,
-            },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: "Jumlah Pengguna",
-              },
-            },
-          },
-        },
-      });
+
+    async fetchUsers(headers) {
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", { method: "GET", headers });
+        const result = await response.json();
+        this.stats.users = result.data?.count || 0;
+      } catch (err) {
+        console.error("Gagal mengambil data pengguna:", err);
+      }
     },
-    initChart() {
-      const ctx = document.getElementById("passengerChart").getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-          datasets: [
-            {
-              label: "Penumpang (Menggunakan Aplikasi)",
-              data: [12, 19, 3, 5, 2, 3, 8, 15, 10, 20],
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 2,
-              fill: false,
-            },
-            {
-              label: "Penumpang (Manual)",
-              data: [5, 10, 15, 10, 20, 18, 10, 7, 5, 4],
-              borderColor: "rgba(255, 99, 132, 1)",
-              borderWidth: 2,
-              fill: false,
-            },
-          ],
-        },
-      });
+
+    async fetchDrivers(headers) {
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const result = await response.json();
+        this.stats.drivers = result.data?.count || 0;
+      } catch (err) {
+        console.error("Gagal mengambil data pengemudi:", err);
+      }
+    },
+
+    async fetchRoutes(headers) {
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/routes", { method: "GET", headers });
+        const result = await response.json();
+        this.stats.routes = result.data?.count || result.total || 0;
+      } catch (err) {
+        console.error("Gagal mengambil data rute:", err);
+        this.stats.routes = 0;
+      }
+    },
+
+    async fetchDriversList(headers) {
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const result = await response.json();
+        this.driversList = result.data?.drivers || [];
+      } catch (err) {
+        console.error("Gagal mengambil daftar pengemudi:", err);
+      }
+    },
+
+    async fetchReviews(headers) {
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/reviews", { method: "GET", headers });
+        const result = await response.json();
+        this.reviews = result.data.reviews.map((review) => ({
+          id: review.id,
+          name: review.passenger_name,
+          profilePicture: "@/assets/default-profile.jpg",
+          rating: review.star,
+          comment: review.comment,
+          time: "N/A",
+        }));
+      } catch (err) {
+        console.error("Gagal mengambil data ulasan:", err);
+      }
+    },
+
+    setActiveMenu(menuItem) {
+      this.activeMenu = menuItem;
     },
   },
 };
@@ -789,7 +657,7 @@ export default {
 }
 
 .overview-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -869,20 +737,26 @@ export default {
 }
 
 /* Stagger the animation for each card */
-.overview-card:nth-child(1) { animation-delay: 0s; }
-.overview-card:nth-child(2) { animation-delay: 0.2s; }
-.overview-card:nth-child(3) { animation-delay: 0.4s; }
+.overview-card:nth-child(1) {
+  animation-delay: 0s;
+}
+.overview-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.overview-card:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 /* Media queries for better responsiveness */
 @media (max-width: 1024px) {
   .overview {
     gap: 15px;
   }
-  
+
   .overview-card {
     flex: 1 1 200px; /* Adjust min-width for medium screens */
   }
-  
+
   .overview-card h3 {
     font-size: 1.5rem;
   }
@@ -892,12 +766,12 @@ export default {
   .overview {
     flex-direction: column;
   }
-  
+
   .overview-card {
     width: 100%;
     margin-bottom: 15px;
   }
-  
+
   .logo-image,
   .logo-image-section {
     width: 35px;
@@ -909,18 +783,18 @@ export default {
   .overview-card {
     padding: 15px;
   }
-  
+
   .overview-card h3 {
     font-size: 1.2rem;
   }
-  
+
   .logo-image,
   .logo-image-section {
     width: 30px;
     height: 30px;
     right: 15px;
   }
-  
+
   .growth {
     font-size: 0.8rem;
     padding: 3px 6px;

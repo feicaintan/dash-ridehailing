@@ -83,211 +83,200 @@
 
           <li>
             <router-link
-              to="/report"
+              to="/tarifruteGov"
               class="menu-item"
-              :class="{ active: activeMenu === 'report' }"
-              @click="setActiveMenu('report')"
+              :class="{ active: activeMenu === 'tarifruteGov' }"
+              @click="setActiveMenu('tarifruteGov')"
             >
               <img
-                src="@/assets/complaint.png"
+                src="@/assets/tarif.png"
                 alt="Logo Keluhan/Blokir"
                 class="button-image inline"
               />
-              Keluhan/Blokir
+              Tarif Rute
             </router-link>
           </li>
         </ul>
       </nav>
       <hr class="divider" />
-      <router-link
-        to="/"
-        class="menu-item"
-        :class="{ active: activeMenu === 'home' }"
-        @click="setActiveMenu('home')"
-      >
-        <img
-          src="@/assets/quit.png"
-          alt="Logo Quit"
-          class="button-image inline"
-        />
-        Login as Admin
-      </router-link>
+      <router-link to="/loginform" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
+          <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
+          Login as Admin
+        </router-link>
     </aside>
 
+    <!-- Main Content (Improved) -->
     <main class="main-content">
-      <div class="analysis-section">
-        <h2>Manajemen Kebijakan</h2>
-
-        <div class="card">
-          <div class="card-item">
-            <span>Pengaturan Tarif</span>
-            <router-link to="/tarifGov" class="view-button">Lihat</router-link>
-          </div>
-          <div class="card-item">
-            <span>Daftar Rute Trayek</span>
-            <router-link to="/trayekGov" class="view-button">Lihat</router-link>
-          </div>
-          <div class="card-item">
-            <span>Verifikasi Izin Pengemudi</span>
-            <router-link to="/NewDriversGovVue" class="view-button"
-              >Lihat</router-link
-            >
-          </div>
-          <div class="card-item">
-            <span>Daftar Ulasan Terhadap Pengemudi</span>
-            <router-link to="/driverReportGov" class="view-button"
-              >Lihat</router-link
-            >
-          </div>
-          <div class="card-item">
-            <span>Daftar Pengemudi yang Terblokir</span>
-            <router-link to="/blockedDriverGov" class="view-button"
-              >Lihat</router-link
-            >
-          </div>
-        </div>
-
-        <!-- Daftar Pengemudi -->
-        <div class="driver-list-section">
-          <div class="driver-list-card">
-            <h4>Daftar Pengemudi</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama Pengemudi</th>
-                  <th>Nomor Telepon</th>
-                  <th>Email</th>
-                  <th>Nomor Kendaraan</th>
-                  <th>Nomor SIM</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="driver in drivers" :key="driver.email">
-                  <td>{{ driver.name }}</td>
-                  <td>{{ driver.phone }}</td>
-                  <td>{{ driver.email }}</td>
-                  <td>{{ driver.vehicleNumber }}</td>
-                  <td>{{ driver.simNumber }}</td>
-                  <td>
-                    <span
-                      :class="
-                        driver.status === 'online'
-                          ? 'status-online'
-                          : 'status-offline'
-                      "
-                    >
-                      {{ driver.status }}
-                    </span>
-                  </td>
-                </tr>
-                <tr v-if="drivers.length === 0">
-                  <td colspan="6">Data tidak ditemukan.</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- Tombol Selengkapnya -->
-            <div class="button-container">
-              <router-link to="/driverGov" class="more-button">
-                Selengkapnya &raquo;
-              </router-link>
-            </div>
-          </div>
-        </div>
-
-        <!-- Daftar Pengguna -->
-        <div class="user-list-section">
-          <div class="user-list-card">
-            <h4>Daftar Pengguna</h4>
-            <table>
-              <thead>
-                <tr>
-                  <th>Nama Pengguna</th>
-                  <th>Email</th>
-                  <th>Nomor Telepon</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="user in users" :key="user.email">
-                  <td>{{ user.name }}</td>
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.phone }}</td>
-                </tr>
-                <tr v-if="users.length === 0">
-                  <td colspan="3">Data tidak ditemukan.</td>
-                </tr>
-              </tbody>
-            </table>
-            <!-- Tombol Selengkapnya -->
-            <div class="button-container">
-              <router-link to="/userGov" class="more-button">
-                Selengkapnya &raquo;
-              </router-link>
-            </div>
-          </div>
-        </div>
+      <div class="header">
+        <h2 class="page-title">Manajemen Kebijakan</h2>
       </div>
-    </main>
+  
+      <!-- Data Content -->
+      <section class="content">
+        <!-- Driver Section -->
+        <div class="card driver-card">
+          <div class="card-header">
+            <img src="@/assets/driverplus.png" alt="Pengemudi Icon" class="title-icon" />
+            <h2 class="card-title">Pengemudi</h2>
+          </div>
+          <ul class="card-list">
+            <li class="card-list-item">
+              <span class="item-label">Daftar Ulasan Terhadap Pengemudi</span>
+              <router-link to="/driverReportGov" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
+            </li>
+            <li class="card-list-item">
+              <span class="item-label">Daftar Pengemudi Terblokir</span>
+              <router-link to="/blockedDriverGov" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
+            </li>
+            <li class="card-list-item">
+              <span class="item-label">Daftar Verifikasi Pengemudi Baru</span>
+              <router-link to="/NewDriversGovVue" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- User Data -->
+        <div class="card user-card">
+          <div class="card-header">
+            <img src="@/assets/user-icon.png" alt="Pengguna Icon" class="title-icon" />
+            <h2 class="card-title">Pengguna</h2>
+          </div>
+          <ul class="card-list">
+            <li class="card-list-item">
+              <span class="item-label">Daftar Data Pengguna</span>
+              <router-link to="/userGov" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
+            </li>
+          </ul>
+          <div class="stats-container">
+  <div class="stat-item">
+    <div class="stat-number">{{ totalUsers }}</div>
+    <div class="stat-label">Total Pengguna</div>
   </div>
+  <div class="stat-item">
+    <div class="stat-number">{{ totalDrivers }}</div>
+    <div class="stat-label">Total Pengemudi</div>
+  </div>
+</div>
+        </div>
+  
+<!-- Driver List -->
+<div class="card large-card driver-list-card">
+  <div class="card-header-with-actions">
+    <h2 class="card-title">Daftar Data Pengemudi</h2>
+  </div>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nama Pengemudi</th>
+          <th>Nomor Telepon</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="driver in drivers.slice(0, 5)" :key="driver.ktp">
+          <td>{{ driver.name }}</td>
+          <td>{{ driver.phone_number }}</td>
+          <td>{{ driver.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="button-container">
+    <router-link to="/driverGov" class="more-item">
+      Selengkapnya <i class="fas fa-chevron-right"></i>
+    </router-link>
+  </div>
+</div>
+
+</section>
+</main>
+</div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      filteredDrivers: [], // Data untuk verifikasi pendaftaran
-      drivers: [
-        {
-          name: "Budi Santoso",
-          phone: "081298765432",
-          email: "budi@example.com",
-          vehicleNumber: "B 1234 CD",
-          simNumber: "SIM123456",
-          photo: "@/assets/driver1.jpg", // Ganti dengan path foto yang sesuai
-          status: "online",
-          verificationStatus: "Terverifikasi",
-        },
-        {
-          name: "Agus Widodo",
-          phone: "082334455667",
-          email: "agus@example.com",
-          vehicleNumber: "B 5678 EF",
-          simNumber: "SIM654321",
-          photo: "@/assets/driver2.jpg", // Ganti dengan path foto yang sesuai
-          status: "offline",
-          verificationStatus: "Belum Terverifikasi",
-        },
-      ],
-
-      users: [
-        {
-          name: "Ani Wijaya",
-          phone: "081234567890",
-          email: "ani@example.com",
-        },
-        {
-          name: "Dedi Kurniawan",
-          phone: "085678901234",
-          email: "dedi@example.com",
-        },
-      ], // Data untuk daftar pengguna
+      drivers: [],
+      totalUsers: 0,
+      totalDrivers: 0, // ganti dari pengguna baru ke total pengemudi
     };
   },
-  computed: {
-    // Filtered drivers for verification section
-    filteredDrivers() {
-      return this.drivers.filter(
-        (driver) => driver.verificationStatus === "Belum Terverifikasi"
-      );
+  mounted() {
+    this.fetchDrivers();
+    this.fetchUsers();
+  },
+  methods: {
+    async fetchDrivers() {
+      const token = localStorage.getItem("access_token");
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+        if (Array.isArray(result.data?.drivers)) {
+          this.drivers = result.data.drivers;
+          this.totalDrivers = result.data.count; // total pengemudi
+        } else {
+          console.warn("Struktur data driver tidak sesuai:", result);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data pengemudi:", error);
+      }
+    },
+
+    async fetchUsers() {
+      const token = localStorage.getItem("access_token");
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+        if (Array.isArray(result.data?.users)) {
+          this.totalUsers = result.data.count; // total pengguna
+        } else {
+          console.warn("Struktur data user tidak sesuai:", result);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data pengguna:", error);
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+/* General Layout */
 .dashboard-container {
   display: flex;
   height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 /* Sidebar Styling */
@@ -338,6 +327,14 @@ export default {
   margin-left: 10px;
 }
 
+.tagline {
+  font-size: 12px;
+  font-style: italic;
+  color: white;
+  margin-top: 10px;
+  text-align: left;
+}
+
 .menu-title {
   font-size: 12px;
   margin: 20px 0 10px;
@@ -362,6 +359,16 @@ export default {
   padding: 10px;
   border-radius: 5px;
   font-size: 14px;
+  list-style: none;
+}
+
+.menu-item.active,
+.menu-item:hover {
+  background-color: #3b82bf;
+}
+
+.menu-icon {
+  font-size: 16px;
 }
 
 .menu-item.active,
@@ -376,151 +383,404 @@ export default {
   margin: 20px 0;
 }
 
-/* Main Content Styling */
+.logout {
+  color: #ff8080;
+  margin-top: auto;
+}
+
+.logout .menu-icon {
+  color: #ff4040;
+}
+
+/* Main Content Updated Styles */
 .main-content {
   flex: 1;
-  padding: 20px;
-  background-color: #f7f9fc;
+  background-color: #f8f9fa;
+  padding: 25px;
   overflow-y: auto;
 }
 
-.analysis-section {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
+.page-title {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.card-item {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #e0e7ff;
-  padding: 10px;
-  border-radius: 4px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e1e5eb;
 }
 
-.verification-section {
-  margin-top: 20px;
+/* Content Grid Improvements */
+.content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+/* Card Styling Improvements */
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.verification-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+.card-header-with-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.verification-card table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.title-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
 }
 
-.verification-card th,
-.verification-card td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #d1d5db;
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
 }
 
-.driver-list-section {
+/* Card List Styling */
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-list-item:last-child {
+  border-bottom: none;
+}
+
+.item-label {
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Button Link Improvements */
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #5b9bd5;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-link:hover {
+  background-color: #4a8bc6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Large Card Span */
+.large-card {
+  grid-column: span 2;
+}
+
+/* Stats Container */
+.stats-container {
+  display: flex;
+  justify-content: space-around;
   margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
 }
 
-.driver-list-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border: 1px solid #d1d5db;
+.stat-item {
+  text-align: center;
+  padding: 15px;
   border-radius: 8px;
+  background-color: #f8f9fa;
 }
 
-.driver-list-card table {
+.stat-number {
+  font-size: 24px;
+  font-weight: 600;
+  color: #5b9bd5;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+/* Table Improvements */
+.table-container {
+  overflow-x: auto;
+  margin: 0 -10px;
+}
+
+.table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
 }
 
-.driver-list-card th,
-.driver-list-card td {
-  padding: 10px;
+.table th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: 12px 15px;
   text-align: left;
-  border: 1px solid #d1d5db;
+  border-bottom: 2px solid #e1e5eb;
 }
 
-.status-offline {
-  color: #ef4444; /* Merah untuk offline */
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+  vertical-align: middle;
+}
+
+.table tr:hover td {
+  background-color: #f9fbfd;
+}
+
+/* Driver Photo */
+.driver-photo-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.driver-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .status-online {
-  color: #22c55e; /* Hijau untuk online */
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
 }
 
-/* User List Styling */
-.user-list-section {
-  margin-top: 20px;
+.status-offline {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
 }
-.user-list-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border: 1px solid #d1d5db;
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.action-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button.edit {
+  background-color: rgba(91, 155, 213, 0.1);
+  color: #5b9bd5;
+}
+
+.action-button.view {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+/* User Grid */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.user-grid-card {
+  background-color: #fff;
   border-radius: 8px;
-}
-.user-list-card table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-.user-list-card th,
-.user-list-card td {
-  padding: 10px;
-  text-align: left;
-  border: 1px solid #d1d5db;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
 }
 
-/* Styling untuk tombol Selengkapnya */
+.user-grid-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 15px;
+  background-color: #f0f0f0;
+  border: 3px solid #e1e5eb;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info {
+  text-align: center;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+  color: #333;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-joined {
+  font-size: 12px;
+  color: #adb5bd;
+  margin: 0;
+}
+
+.user-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.user-action-button {
+  background: none;
+  border: none;
+  color: #adb5bd;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+}
+
+.user-action-button:hover {
+  color: #5b9bd5;
+}
+
+/* See More Button */
 .button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-.more-button {
-  background-color: #5b9bd5; /* Warna biru yang sama dengan sidebar */
-  color: white;
+.more-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: white;
+  color: #5b9bd5;
+  padding: 8px 15px;
+  border-radius: 6px;
   text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #5b9bd5;
 }
 
-.more-button:hover {
-  background-color: #3b82bf; /* Warna lebih gelap saat hover */
-  transform: scale(1.05); /* Efek membesar sedikit */
-}
-/* Styling untuk tombol Lihat */
-.view-button {
-  background-color: #5b9bd5; /* Warna biru yang sama dengan sidebar */
+.more-item:hover {
+  background-color: #5b9bd5;
   color: white;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  display: inline-block;
 }
 
-.view-button:hover {
-  background-color: #3b82bf; /* Warna lebih gelap saat hover */
-  transform: scale(1.05); /* Efek membesar sedikit */
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+  
+  .large-card {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .user-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
 }
 </style>

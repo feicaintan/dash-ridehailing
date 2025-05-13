@@ -9,7 +9,7 @@ import LoginForm from '../views/loginform.vue';
 import GovDash from '../views/gov-dash.vue';
 import Analysis from '../views/analysis.vue';
 import management from '../views/management.vue';
-import report from '../views/report.vue';
+import tarifruteGov from '../views/tarifruteGov.vue';
 import trayek from '../views/daftar-trayek.vue';
 import userlist from '../views/daftar-user.vue';
 import LogActivity from '../views/LogActivity.vue';
@@ -87,9 +87,9 @@ const routes = [
     component: management,
   },
   {
-    path: '/report',
-    name: 'report',
-    component: report,
+    path: '/tarifruteGov',
+    name: 'tarifruteGov',
+    component: tarifruteGov,
   },
   {
     path: '/daftar-trayek',

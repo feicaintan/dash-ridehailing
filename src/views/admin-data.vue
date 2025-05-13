@@ -95,7 +95,7 @@
       </nav>
       <hr class="divider" />
         <router-link
-          to="/loginform"
+          to="/govdash"
           class="menu-item"
           :class="{ active: activeMenu === 'home' }"
           @click="setActiveMenu('loginform')"
@@ -109,146 +109,168 @@
         </router-link>
     </aside>
 
-    <!-- Main Content -->
+  
+    <!-- Main Content (Improved) -->
     <main class="main-content">
       <div class="header">
-        <h2>Data</h2>
+        <h2 class="page-title">Data</h2>
       </div>
-
+  
       <!-- Data Content -->
       <section class="content">
-        <!-- Reports Section -->
-        <div class="card">
-          <h2 class="card-title">
-            <img src="@/assets/driverplus.png" alt="Trayek Icon" class="title-icon" />
-            Pengemudi</h2>
+        <!-- Driver Section -->
+        <div class="card driver-card">
+          <div class="card-header">
+            <img src="@/assets/driverplus.png" alt="Pengemudi Icon" class="title-icon" />
+            <h2 class="card-title">Pengemudi</h2>
+          </div>
           <ul class="card-list">
-            <li>
-              Daftar Ulasan Terhadap Pengemudi
-              <router-link to="/driver-report" class="button-link"
-                >Lihat</router-link
-              >
+            <li class="card-list-item">
+              <span class="item-label">Daftar Ulasan Terhadap Pengemudi</span>
+              <router-link to="/driver-report" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
             </li>
-            <li>
-              Daftar Pengemudi Terblokir
-              <router-link to="/blocked-drivers" class="button-link"
-                >Lihat</router-link
-              >
+            <li class="card-list-item">
+              <span class="item-label">Daftar Pengemudi Terblokir</span>
+              <router-link to="/blocked-drivers" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
             </li>
-            <li>
-              Daftar Verifikasi Pengemudi Baru
-              <router-link to="/NewDriversAdminVue" class="button-link"
-                >Lihat</router-link
-              >
+            <li class="card-list-item">
+              <span class="item-label">Daftar Verifikasi Pengemudi Baru</span>
+              <router-link to="/NewDriversAdminVue" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
             </li>
           </ul>
         </div>
-
+  
         <!-- User Data -->
-        <div class="card">
-          <h2 class="card-title">
-            <img src="@/assets/user-icon.png" alt="Trayek Icon" class="title-icon" />
-            Pengguna</h2>
+        <div class="card user-card">
+          <div class="card-header">
+            <img src="@/assets/user-icon.png" alt="Pengguna Icon" class="title-icon" />
+            <h2 class="card-title">Pengguna</h2>
+          </div>
           <ul class="card-list">
-            <li>
-              Daftar Data Pengguna
-              <router-link to="/daftar-user" class="button-link"
-                >Lihat</router-link
-              >
+            <li class="card-list-item">
+              <span class="item-label">Daftar Data Pengguna</span>
+              <router-link to="/daftar-user" class="button-link">
+                <i class="fas fa-eye"></i> Lihat
+              </router-link>
             </li>
           </ul>
-        </div>
-
-        <!-- Driver List -->
-        <div class="card large-card" style="position: relative">
-          <h2 class="card-title">Daftar Data Pengemudi</h2>
-          <table class="table">
-            <thead>
-              <tr>
-            <th>Foto</th>
-            <th>Nama Pengemudi</th>
-            <th>Nomor Telepon</th>
-            <th>Email</th>
-            <th>Nomor KTP</th>
-            <th>Nomor SIM</th>
-            <th>Password</th>
-            <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="driver in filteredDrivers" :key="driver.ktp">
-            <td><img :src="driver.photo" alt="Driver Photo" class="driver-photo" /></td>
-            <td>{{ driver.name }}</td>
-            <td>{{ driver.phone }}</td>
-            <td>{{ driver.email }}</td>
-            <td>{{ driver.ktp }}</td>
-            <td>{{ driver.sim }}</td>
-            <td>{{ driver.password }}</td>
-            <tr>
-              <span :class="{'status-online': driver.status === 'Online', 'status-offline': driver.status === 'Offline'}">
-                {{ driver.status }}
-              </span>
-            </tr>
-            </tr>
-            </tbody>
-          </table>
-          <div class="button-container">
-            <router-link to="/daftar-driver" class="more-item">
-              Selengkapnya &raquo;
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Application User Details -->
-        <div class="card large-card">
-          <h2 class="card-title">Daftar Data Pengguna</h2>
-          <div class="user-details">
-            <div class="user-card">
-              <p>Travis</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>John</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>Kevin</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>Debora</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>Mikha</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>Alice</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-            <div class="user-card">
-              <p>Adestansia</p>
-              <p>xxxxx@gmail.com</p>
-            </div>
-          </div>
-          <!-- Button Container -->
-          <div class="button-container">
-            <router-link to="/daftar-user" class="more-item">
-              Selengkapnya &raquo;
-            </router-link>
-          </div>
-        </div>
-      </section>
-    </main>
+          <div class="stats-container">
+  <div class="stat-item">
+    <div class="stat-number">{{ totalUsers }}</div>
+    <div class="stat-label">Total Pengguna</div>
   </div>
+  <div class="stat-item">
+    <div class="stat-number">{{ totalDrivers }}</div>
+    <div class="stat-label">Total Pengemudi</div>
+  </div>
+</div>
+        </div>
+  
+<!-- Driver List -->
+<div class="card large-card driver-list-card">
+  <div class="card-header-with-actions">
+    <h2 class="card-title">Daftar Data Pengemudi</h2>
+  </div>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nama Pengemudi</th>
+          <th>Nomor Telepon</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="driver in drivers.slice(0, 5)" :key="driver.ktp">
+          <td>{{ driver.name }}</td>
+          <td>{{ driver.phone_number }}</td>
+          <td>{{ driver.email }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="button-container">
+    <router-link to="/daftar-driver" class="more-item">
+      Selengkapnya <i class="fas fa-chevron-right"></i>
+    </router-link>
+  </div>
+</div>
+
+</section>
+</main>
+</div>
 </template>
 
 <script>
 export default {
   name: "Dashboard",
+  data() {
+    return {
+      drivers: [],
+      totalUsers: 0,
+      totalDrivers: 0, // ganti dari pengguna baru ke total pengemudi
+    };
+  },
+  mounted() {
+    this.fetchDrivers();
+    this.fetchUsers();
+  },
+  methods: {
+    async fetchDrivers() {
+      const token = localStorage.getItem("access_token");
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+        if (Array.isArray(result.data?.drivers)) {
+          this.drivers = result.data.drivers;
+          this.totalDrivers = result.data.count; // total pengemudi
+        } else {
+          console.warn("Struktur data driver tidak sesuai:", result);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data pengemudi:", error);
+      }
+    },
+
+    async fetchUsers() {
+      const token = localStorage.getItem("access_token");
+      try {
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+        if (Array.isArray(result.data?.users)) {
+          this.totalUsers = result.data.count; // total pengguna
+        } else {
+          console.warn("Struktur data user tidak sesuai:", result);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data pengguna:", error);
+      }
+    },
+  },
 };
 </script>
+
+
 
 <style scoped>
 /* General Layout */
@@ -360,7 +382,6 @@ export default {
 .menu-item.active,
 .menu-item:hover {
   background-color: #3b82bf;
-  /* Warna hover */
 }
 
 .divider {
@@ -372,7 +393,6 @@ export default {
 
 .logout {
   color: #ff8080;
-  /* Merah terang */
   margin-top: auto;
 }
 
@@ -380,207 +400,395 @@ export default {
   color: #ff4040;
 }
 
-/* Main Content */
+/* Main Content Updated Styles */
 .main-content {
   flex: 1;
-  background-color: #f0f4f7;
-  padding: 20px;
+  background-color: #f8f9fa;
+  padding: 25px;
   overflow-y: auto;
-
 }
 
-.main-content .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.page-title {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e1e5eb;
 }
 
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 1000px;
-}
-
-/* Input search */
-.search-bar {
-  width: 100%;
-  padding: 10px 15px 10px 40px; 
-  border: 1px solid #ccc;
-  border-radius: 20px; 
-  font-size: 14px;
-  box-sizing: border-box;
-  outline: none;
-}
-.search-icon {
-  position: absolute;
-  left: 10px; 
-  width: 20px; 
-  height: 20px;
-  pointer-events: none; 
-}
-.add-widget-button {
-  background-color: #004085;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  font-size: 14px;
-  margin-left: 20px;
-}
-
-.add-widget-button:hover {
-  background-color: #0056b3;
-}
-
+/* Content Grid Improvements */
 .content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 25px;
 }
 
+/* Card Styling Improvements */
 .card {
   background: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.large-card {
-  grid-column: span 2;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-header-with-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.title-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
 }
 
 .card-title {
   font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
 }
 
+/* Card List Styling */
 .card-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.card-list li {
+.card-list-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.view-button {
-  background-color: #004085;
+.card-list-item:last-child {
+  border-bottom: none;
+}
+
+.item-label {
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Button Link Improvements */
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #5b9bd5;
   color: white;
+  padding: 8px 15px;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.view-button:hover {
-  background-color: #0056b3;
+.button-link:hover {
+  background-color: #4a8bc6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Large Card Span */
+.large-card {
+  grid-column: span 2;
+}
+
+/* Stats Container */
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 600;
+  color: #5b9bd5;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+/* Table Improvements */
+.table-container {
+  overflow-x: auto;
+  margin: 0 -10px;
 }
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
 }
 
-.table th,
-.table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+.table th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: 12px 15px;
   text-align: left;
+  border-bottom: 2px solid #e1e5eb;
 }
 
-.status {
-  font-weight: bold;
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #444;
+  vertical-align: middle;
 }
 
-.status.online {
-  color: green;
+.table tr:hover td {
+  background-color: #f9fbfd;
 }
 
-.status.offline {
-  color: red;
-}
-
-.user-details {
+/* Driver Photo */
+.driver-photo-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
   display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.driver-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-online {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+}
+
+.status-offline {
+  background-color: rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.action-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button.edit {
+  background-color: rgba(91, 155, 213, 0.1);
+  color: #5b9bd5;
+}
+
+.action-button.view {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+/* User Grid */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 20px;
 }
 
-.user-card {
-  background-color: #f7f9fc;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.user-grid-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
 }
 
-.button-link {
-  display: inline-block;
-  background-color: rgb(25, 86, 152);
-  color: white;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 14px;
+.user-grid-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 15px;
+  background-color: #f0f0f0;
+  border: 3px solid #e1e5eb;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info {
   text-align: center;
-  transition: background-color 0.3s;
 }
 
-.button-link:hover {
-  background-color: rgb(9, 44, 81);
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px;
+  color: #333;
 }
 
-/* Button Container */
+.user-email {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-joined {
+  font-size: 12px;
+  color: #adb5bd;
+  margin: 0;
+}
+
+.user-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.user-action-button {
+  background: none;
+  border: none;
+  color: #adb5bd;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 5px;
+}
+
+.user-action-button:hover {
+  color: #5b9bd5;
+}
+
+/* See More Button */
 .button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
 }
 
-.see-more-button {
-  background-color: rgb(255, 255, 255);
-  color: black;
-  padding: 10px 10px;
-  border-radius: 10px;
-  border: 1px solid black;
-  text-decoration: none;
-  font-size: 12px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.see-more-button:hover {
-  background-color: #0056b3;
-  color: white;
-}
-
 .more-item {
-  display: inline-block;
-  background-color: rgb(255, 255, 255);
-  color: black;
-  padding: 10px 10px;
-  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: white;
+  color: #5b9bd5;
+  padding: 8px 15px;
+  border-radius: 6px;
   text-decoration: none;
-  font-size: 12px;
-  transition: background-color 0.3s, color 0.3s;
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #5b9bd5;
 }
 
 .more-item:hover {
-  background-color: #0056b3;
+  background-color: #5b9bd5;
   color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+  
+  .large-card {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .user-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
 }
 </style>

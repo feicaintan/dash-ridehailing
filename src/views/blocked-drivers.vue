@@ -1,47 +1,48 @@
 <template>
   <div class="blocked-drivers-container">
-    <!-- Back Button -->
+    <!-- Tombol Kembali -->
     <div class="back-button">
       <button @click="goBack" class="btn-back">&laquo; Kembali</button>
     </div>
 
-    <h1>DAFTAR Driver yang Terblokir</h1>
+    <h1>DAFTAR DRIVER YANG TERBLOKIR</h1>
 
-    <!-- Search and Total Count -->
+    <!-- Pencarian dan Jumlah -->
     <div class="controls">
       <input v-model="search" type="text" placeholder="Cari driver..." class="search-input" />
-      <span class="total-count">Total Driver Terblokir: {{ filteredBlockedDrivers.length }}</span>
+      <span class="total-count">Total: {{ filteredBlockedDrivers.length }} driver</span>
     </div>
 
-    <!-- Blocked Drivers Table -->
-    <table class="blocked-drivers-table">
-      <thead>
-        <tr>
-          <th>Foto Profil</th>
-          <th>Nama Driver</th>
-          <th>Email</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(driver, index) in paginatedBlockedDrivers" :key="index">
-          <td>
-            <img :src="driver.profilePicture || 'https://via.placeholder.com/50'" 
-                 alt="Profile" class="profile-img"/>
-          </td>
-          <td>{{ driver.name }}</td>
-          <td>{{ driver.email }}</td>
-          <td>
-            <button @click="confirmUnblock(driver)" class="btn-unblock">Buka Blokir</button>
-          </td>
-        </tr>
-        <tr v-if="!paginatedBlockedDrivers.length">
-          <td colspan="4" class="no-data">Tidak ada data yang ditemukan.</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Tabel Driver Terblokir -->
+    <div class="table-wrapper">
+      <table class="blocked-drivers-table">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(driver, index) in paginatedBlockedDrivers" :key="index">
+            <td>
+              <img :src="driver.profilePicture || 'https://via.placeholder.com/50'" alt="Profile" class="profile-img"/>
+            </td>
+            <td>{{ driver.name }}</td>
+            <td>{{ driver.email }}</td>
+            <td>
+              <button @click="confirmUnblock(driver)" class="btn-unblock">Buka Blokir</button>
+            </td>
+          </tr>
+          <tr v-if="!paginatedBlockedDrivers.length">
+            <td colspan="4" class="no-data">Tidak ada data ditemukan.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <!-- Pagination -->
+    <!-- Navigasi Halaman -->
     <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1" class="btn-pagination">&laquo; Prev</button>
       <span>Halaman {{ currentPage }} dari {{ totalPages }}</span>
@@ -52,6 +53,7 @@
 
 <script>
 import Swal from 'sweetalert2';
+import { useDriverStore } from '@/stores/driverStore'; // pastikan path benar
 
 export default {
   data() {
@@ -78,37 +80,42 @@ export default {
   },
   methods: {
     async fetchBlockedDrivers() {
-   try {
-     const token = localStorage.getItem("token") || localStorage.getItem("access_token") || ""; 
-     if (!token.trim()) {
-       console.error("Token tidak ditemukan atau kosong! Harap login ulang.");
-       return;
-     }
+  try {
+    const token = localStorage.getItem("access_token")?.trim();
+    if (!token) throw new Error("Token tidak ditemukan di localStorage");
 
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/block", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
 
-        const result = await response.json();
-        if (result.status === "Success" && result.data.block_accounts) {
-          // Mapping data API ke format yang digunakan di Vue
-          this.blockedDrivers = result.data.block_accounts.map(driver => ({
-            id: driver.id,
-            name: driver.name,
-            email: driver.email,
-            profilePicture: driver.profile_picture || "" 
-          }));
-        } else {
-          console.error("Gagal mengambil data: ", result);
-        }
-      } catch (error) {
-        console.error("Error fetching blocked drivers:", error);
-      }
-    },
+    const response = await fetch("http://188.166.179.146:8000/api/dashboard/block", {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) throw new Error("Gagal mengambil data driver terblokir");
+
+    const data = await response.json();
+    console.log("Blocked driver data:", data);
+
+    if (data && data.data && Array.isArray(data.data.block_accounts)) {
+  this.blockedDrivers = data.data.block_accounts.map(driver => ({
+    id: driver.id,
+    name: driver.name,
+    email: driver.email,
+    phone: driver.phone_number || "-",
+    simNumber: driver.sim || "-",
+    licenseNumber: driver.license_number || "-",
+    status: driver.status || "blocked",
+  }));
+} else {
+  console.error("Struktur respons API tidak sesuai:", data);
+}
+  } catch (error) {
+    console.error("Error fetching blocked drivers:", error);
+  }
+},
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
@@ -117,31 +124,50 @@ export default {
     },
     confirmUnblock(driver) {
       Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: `Anda akan membuka blokir driver ${driver.name}.`,
+        title: 'Yakin buka blokir?',
+        text: `Driver ${driver.name} akan dibuka blokirnya.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: '#28a745',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, buka blokir!',
-        cancelButtonText: 'Tidak, batalkan'
+        confirmButtonText: 'Ya, buka!',
+        cancelButtonText: 'Batal'
       }).then((result) => {
         if (result.isConfirmed) {
           this.unblockDriver(driver);
-          Swal.fire(
-            'Dibuka!',
-            `Driver ${driver.name} telah dibuka blokir.`,
-            'success'
-          );
+          Swal.fire('Berhasil!', `Driver ${driver.name} telah dibuka blokir.`, 'success');
         }
       });
     },
-    unblockDriver(driver) {
-      this.blockedDrivers = this.blockedDrivers.filter(d => d.id !== driver.id);
-      console.log(`Driver dengan ID ${driver.id} telah dibuka blokir.`);
+    async unblockDriver(driver) {
+      try {
+        const token = localStorage.getItem("access_token") || "";
+        if (!token.trim()) return;
+
+        const response = await fetch(`http://188.166.179.146:8000/api/dashboard/block/${driver.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        if (response.ok && result.status === "Success") {
+          this.blockedDrivers = this.blockedDrivers.filter(d => d.id !== driver.id);
+
+          // Pindahkan ke daftar aktif (global store)
+          const driverStore = useDriverStore();
+          driverStore.addDriver(driver);  // Tambah ke daftar aktif
+        } else {
+          Swal.fire('Gagal!', 'Tidak bisa membuka blokir driver.', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Gagal!', 'Terjadi kesalahan saat membuka blokir.', 'error');
+      }
     },
     goBack() {
-      this.$router.push('/data'); 
+      this.$router.push('/data');
     },
   },
   mounted() {
@@ -150,74 +176,84 @@ export default {
 };
 </script>
 
-
 <style scoped>
+:global(body), :global(html) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .blocked-drivers-container {
-  max-width: 100%;
-  margin: 0 auto;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 30px 0;
+  background-color: #f4f6f8;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
   color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .back-button {
-  margin-bottom: 20px;
-  text-align: left;
+  margin: 0 20px 20px;
 }
 
 .btn-back {
-  padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
+  padding: 10px 20px;
   background-color: #007bff;
-  color: white;
+  color: #fff;
   border: none;
+  font-weight: bold;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  cursor: pointer;
+  transition: 0.3s;
 }
-
 .btn-back:hover {
   background-color: #0056b3;
 }
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin: 0 20px 20px;
 }
 
 .search-input {
-  padding : 10px;
+  flex: 1;
+  min-width: 250px;
+  padding: 10px;
   font-size: 16px;
-  width: 60%;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .total-count {
-  font-size: 16px;
   align-self: center;
+  font-weight: 500;
+  margin-left: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin: 0 20px;
 }
 
 .blocked-drivers-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .blocked-drivers-table th, .blocked-drivers-table td {
-  border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
+  border: 1px solid #ddd;
 }
 
 .blocked-drivers-table th {
@@ -225,30 +261,20 @@ h1 {
   color: white;
 }
 
-.blocked-drivers-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-.btn-details {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-details:hover {
-  background-color: #218838;
+.profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .btn-unblock {
+  padding: 8px 14px;
   background-color: #dc3545;
-  color: white;
   border: none;
+  color: white;
   border-radius: 5px;
-  padding: 5px 10px;
+  font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -260,76 +286,29 @@ h1 {
 .no-data {
   text-align: center;
   color: #999;
+  padding: 15px;
 }
 
 .pagination {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .btn-pagination {
+  padding: 8px 16px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 .btn-pagination:disabled {
-  background-color: #ccc;
+  background-color: #aaa;
   cursor: not-allowed;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 500px;
-}
-
-.modal-title {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.complaint-item {
-  margin-bottom: 5px;
-}
-
-.btn-close {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-close:hover {
-  background-color: #0056b3;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
 }
 </style>

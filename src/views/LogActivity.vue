@@ -95,7 +95,7 @@
       </nav>
       <hr class="divider" />
         <router-link
-          to="/loginform"
+          to="/govdash"
           class="menu-item"
           :class="{ active: activeMenu === 'home' }"
           @click="setActiveMenu('loginform')"
@@ -115,234 +115,205 @@
         <h2>Log Aktivitas</h2>
       </div>
 
-      <!-- Grafik -->
-      <div class="charts-container">
-        <div class="chart">
-          <h3>Pengemudi Aktif</h3>
-          <canvas id="activeDriversChart"></canvas>
-        </div>
-      </div>
+<!-- Riwayat Perjalanan Section -->
+<div class="trip-history-section">
+  <h3>Riwayat Perjalanan</h3>
 
-      <!-- Tombol Navigasi -->
-      <div class="buttons-container">
-        <router-link to="/ActiveDriver" class="btn">
-          Lihat Daftar Pengemudi Aktif
-        </router-link>
-      </div>
+  <!-- Search Bar -->
+  <div class="search-container">
+    <img src="@/assets/search.png" alt="Search Icon" class="search-icon" />
+    <input
+      type="text"
+      v-model="searchQuery"
+      placeholder="Cari riwayat perjalanan..."
+      class="search-input"
+      @input="filterTrips"
+    />
+  </div>
 
-      <!-- Riwayat Perjalanan Section -->
-      <div class="trip-history-section">
-        <h3>Riwayat Perjalanan</h3>
-        
-        <!-- Search Bar -->
-        <div class="search-container">
-          <img src="@/assets/search.png" alt="Search Icon" class="search-icon" />
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Cari riwayat perjalanan..."
-            class="search-input"
-            @input="filterTrips"
-          />
-        </div>
+  <!-- Spinner saat loading -->
+  <div v-if="isLoading" class="loading-spinner">
+    <p>Memuat data perjalanan...</p>
+  </div>
 
-        <!-- Trip History Table -->
-        <div class="table-container">
-          <table class="trip-table">
-            <thead>
-              <tr>
-                <th>Nama Pengguna</th>
-                <th>Nama Pengemudi</th>
-                <th>Nomor Trayek</th>
-                <th>Rute</th>
-                <th>Waktu Mulai</th>
-                <th>Waktu Selesai</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="trip in paginatedTrips" :key="trip.id">
-                <td>{{ trip.userName }}</td>
-                <td>{{ trip.driverName }}</td>
-                <td>{{ trip.routeNumber }}</td>
-                <td>{{ trip.route }}</td>
-                <td>{{ trip.startTime }}</td>
-                <td>{{ trip.endTime }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <!-- Tabel tampil setelah loading selesai -->
+  <div v-else>
+    <!-- Trip History Table -->
+    <div class="table-container">
+      <table class="trip-table">
+        <thead>
+          <tr>
+            <th>Nama Pengguna</th>
+            <th>Nama Pengemudi</th>
+            <th>Rute</th>
+            <th>Waktu Transaksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="trip in paginatedTrips" :key="trip.id">
+            <td>{{ trip.passenger_name }}</td>
+            <td>{{ trip.driver_name }}</td>
+            <td>{{ trip.route }}</td>
+            <td>{{ formatDate(trip.created_at) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-          <button 
-            @click="previousPage" 
-            :disabled="currentPage === 1"
-            class="pagination-btn"
-          >
-            &laquo; Previous
-          </button>
-          <span class="page-info">
-            Page {{ currentPage }} of {{ totalPages }}
-          </span>
-          <button 
-            @click="nextPage" 
-            :disabled="currentPage === totalPages"
-            class="pagination-btn"
-          >
-            Next &raquo;
-          </button>
-        </div>
-      </div>
-
-
+    <!-- Pagination -->
+    <div class="pagination">
+      <button 
+        @click="previousPage" 
+        :disabled="currentPage === 1"
+        class="pagination-btn"
+      >
+        &laquo; Previous
+      </button>
+      <span class="page-info">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      <button 
+        @click="nextPage" 
+        :disabled="currentPage === totalPages"
+        class="pagination-btn"
+      >
+        Next &raquo;
+      </button>
+    </div>
+  </div>
+</div>
     </main>
   </div>
 </template>
 
 <script>
-import { onMounted } from "vue";
-import Chart from "chart.js/auto";
+import Chart from 'chart.js/auto';
 
 export default {
-  name: "LogActivity",
   data() {
     return {
-      activeMenu: 'log-activity',
-      searchQuery: "",
+      tripHistory: [],
+      filteredTrips: [],
       currentPage: 1,
-      itemsPerPage: 10,
-      tripHistory: [
-        {
-          id: 1,
-          userName: "John Doe",
-          driverName: "Driver A",
-          routeNumber: "MT01",
-          route: "Terminal Purabaya - Joyoboyo",
-          startTime: "2025-01-29 08:00",
-          endTime: "2025-01-29 08:45"
-        },
-        {
-          id: 2,
-          userName: "Jane Smith",
-          driverName: "Driver B",
-          routeNumber: "MT02",
-          route: "Joyoboyo - Tanjung Perak",
-          startTime: "2025-01-29 09:15",
-          endTime: "2025-01-29 10:00"
-        },
-      ],
-      filteredTrips: []
+      pageSize: 5,
+      searchQuery: '',
+      loading: true,
     };
   },
   computed: {
-    totalPages() {
-      return Math.ceil(this.filteredTrips.length / this.itemsPerPage);
-    },
     paginatedTrips() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.filteredTrips.slice(start, end);
-    }
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.filteredTrips.slice(start, start + this.pageSize);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredTrips.length / this.pageSize);
+    },
   },
   methods: {
-    setActiveMenu(menu) {
-      this.activeMenu = menu;
+    async fetchTripHistory() {
+      this.loading = true;
+      try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/histories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        this.tripHistory = result.data;
+        this.filteredTrips = result.data;
+      } catch (error) {
+        console.error("Error fetching trip history:", error);
+      } finally {
+        this.loading = false;
+      }
     },
     filterTrips() {
       const query = this.searchQuery.toLowerCase();
-      this.filteredTrips = this.tripHistory.filter(trip => 
-        trip.userName.toLowerCase().includes(query) ||
-        trip.driverName.toLowerCase().includes(query) ||
-        trip.routeNumber.toLowerCase().includes(query) ||
-        trip.route.toLowerCase().includes(query)
-      );
+      this.filteredTrips = this.tripHistory.filter((trip) => {
+        return (
+          trip.userName.toLowerCase().includes(query) ||
+          trip.driverName.toLowerCase().includes(query) ||
+          trip.routeNumber.toLowerCase().includes(query) ||
+          trip.route.toLowerCase().includes(query)
+        );
+      });
       this.currentPage = 1;
     },
+    previousPage() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
     nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
+      if (this.currentPage < this.totalPages) this.currentPage++;
+    },
+    async fetchActiveDrivers() {
+      try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const result = await response.json();
+        const activeDrivers = result.data.drivers.filter(driver => driver.status === "on");
+        this.activeDriversCount = activeDrivers.length;
+      } catch (error) {
+        console.error("Error fetching active drivers:", error);
       }
     },
-    previousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    }
+    renderChart() {
+      const ctx = document.getElementById("activeDriversChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Pengemudi Aktif"],
+          datasets: [
+            {
+              label: "Jumlah",
+              data: [this.activeDriversCount],
+              backgroundColor: "rgba(54, 162, 235, 0.6)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Jumlah Pengemudi",
+              },
+            },
+          },
+        },
+      });
+    },
+    formatDate(dateStr) {
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Date(dateStr).toLocaleString("id-ID", options);
+    },
   },
   mounted() {
-  // Labels untuk 24 jam terakhir
-  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-
-  // Data contoh untuk pengguna dan pengemudi aktif per jam
-  const activeUsersData = [5, 10, 8, 15, 20, 25, 30, 35, 50, 60, 55, 70, 90, 80, 100, 110, 95, 85, 75, 60, 50, 40, 30, 20];
-  const activeDriversData = [3, 5, 4, 10, 15, 20, 22, 25, 35, 45, 40, 55, 65, 60, 70, 75, 68, 58, 48, 38, 28, 22, 18, 10];
-
-  // Grafik Pengguna Aktif
-  const ctxUsers = document.getElementById("activeUsersChart").getContext("2d");
-  new Chart(ctxUsers, {
-    type: "line",
-    data: {
-      labels: hours,
-      datasets: [
-        {
-          label: "Pengguna Aktif",
-          data: activeUsersData,
-          backgroundColor: "rgba(54, 162, 235, 0.3)",
-          borderColor: "rgba(54, 162, 235, 1)",
-          borderWidth: 2,
-          fill: true,
-          tension: 0.3,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          title: { display: true, text: "Jam" },
-        },
-        y: {
-          title: { display: true, text: "Jumlah Pengguna" },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-  // Grafik Pengemudi Aktif
-  const ctxDrivers = document.getElementById("activeDriversChart").getContext("2d");
-  new Chart(ctxDrivers, {
-    type: "bar",
-    data: {
-      labels: hours,
-      datasets: [
-        {
-          label: "Pengemudi Aktif",
-          data: activeDriversData,
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-          borderColor: "rgba(255, 99, 132, 1)",
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          title: { display: true, text: "Jam" },
-        },
-        y: {
-          title: { display: true, text: "Jumlah Pengemudi" },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-
-    this.filteredTrips = [...this.tripHistory];
+    this.fetchTripHistory();
+    this.fetchActiveDrivers().then(() => {
+      this.renderChart();
+    });
   },
 };
 </script>
+
+
 
 <style scoped>
 /* General Layout */
@@ -530,6 +501,7 @@ export default {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Menambahkan jarak bawah */
 }
 
 .search-container {
@@ -623,8 +595,11 @@ export default {
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
   .charts-container {
-    flex-direction: column;
-  }
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px; /* Menambahkan jarak atas */
+}
   
   .buttons-container {
     flex-direction: column;
@@ -658,4 +633,12 @@ export default {
     flex-wrap: wrap;
   }
 }
+
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
 </style>

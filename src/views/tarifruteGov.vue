@@ -1,15 +1,10 @@
 <template>
-  <div class="dashboard-container">
+  <div id="dashboard" class="dashboard-container">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h1 class="logo">
-          Ride-Hailing
-          <img
-            src="@/assets/logoridehailing.png"
-            alt="Logo Ride-Hailing"
-            class="logo-image inline"
-          />
+        <h1 class="logo">Ride-Hailing
+          <img src="@/assets/logoridehailing.png" alt="Logo Ride-Hailing" class="logo-image inline" />
         </h1>
         <p class="tagline">"Yuk, Jelajahi Mikrolet dengan Lebih Mudah!"</p>
       </div>
@@ -17,41 +12,27 @@
         <h3 class="menu-title">MENU</h3>
         <ul>
           <li>
-            <router-link
-              to="/admin-dash"
-              class="menu-item"
-              :class="{ active: activeMenu === 'admin-dash' }"
-              @click="setActiveMenu('admin-dash')"
-            >
-              <img
-                src="@/assets/dash.png"
-                alt="Logo Dashboard"
-                class="button-image inline"
-              />
+              <router-link to="/govdash" class="menu-item" :class="{ active: activeMenu === 'govdash' }"
+              @click="setActiveMenu('gov-dash')">
+              <img src="@/assets/dash.png" alt="Logo Dashboard" class="button-image inline" />
               Dashboard
+          </router-link>
+          </li>
+
+          <li>
+            <router-link to="/management" class="menu-item" :class="{ active: activeMenu === 'management' }"
+              @click="setActiveMenu('management')">
+              <img src="@/assets/management.png" alt="Logo Manajemen Kebijakan" class="button-image inline" />
+              Manajemen Kebijakan
             </router-link>
           </li>
+
           <li>
             <router-link
-              to="/data"
-              class="menu-item"
-              :class="{ active: activeMenu === 'admin-data' }"
-              @click="setActiveMenu('admin-data')"
-            >
-              <img
-                src="@/assets/datalogo.png"
-                alt="Logo Data"
-                class="button-image inline"
-              />
-              Data
-            </router-link>
-          </li>
-          <li>
-            <router-link
-              to="/LogActivity"
+              to="/LogActivityGov"
               class="menu-item"
               :class="{ active: activeMenu === 'log-activity' }"
-              @click="setActiveMenu('log-activity')"
+              @click="setActiveMenu('admin-data')"
             >
               <img
                 src="@/assets/monitoring.png"
@@ -61,54 +42,32 @@
               Log Aktivitas
             </router-link>
           </li>
+
           <li>
-            <router-link
-              to="/TarifRute"
-              class="menu-item active"
-              :class="{ active: activeMenu === 'tarif-rute' }"
-              @click="setActiveMenu('tarif-rute')"
-            >
-              <img
-                src="@/assets/tarif.png"
-                alt="Logo Tarif"
-                class="button-image inline"
-              />
-              Tarif dan Rute
-            </router-link>
-          </li>
-          <li>
-            <router-link
-              to="/AdminAnalysis"
-              class="menu-item"
-              :class="{ active: activeMenu === 'admin-analysis' }"
-              @click="setActiveMenu('admin-analysis')"
-            >
-              <img
-                src="@/assets/anlysis.png"
-                alt="Logo Dashboard"
-                class="button-image inline"
-              />
+            <router-link to="/analysis" class="menu-item" :class="{ active: activeMenu === 'analysis' }"
+              @click="setActiveMenu('analysis')">
+              <img src="@/assets/anlysis.png" alt="Logo Analysis" class="button-image inline" />
               Laporan & Analisis
             </router-link>
           </li>
+
+          <li>
+            <router-link to="/tarifruteGov" class="menu-item active" :class="{ active: activeMenu === 'tarifruteGov' }"
+              @click="setActiveMenu('tarifruteGov')">
+              <img src="@/assets/tarif.png" alt="Logo Keluhan/Blokir" class="button-image inline" />
+              Tarif Rute
+            </router-link>
+          </li>
+
         </ul>
       </nav>
       <hr class="divider" />
-      <router-link
-        to="/govdash"
-        class="menu-item"
-        :class="{ active: activeMenu === 'home' }"
-        @click="setActiveMenu('loginform')"
-      >
-        <img
-          src="@/assets/quit.png"
-          alt="Logo Quit"
-          class="button-image inline"
-        />
-        Log out
-      </router-link>
+      <router-link to="/loginform" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
+          <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
+          Login as Admin
+        </router-link>
     </aside>
-
+    
     <main class="main-content">
       <div class="header">
         <h2 class="page-title">Tarif dan Rute</h2>
@@ -129,7 +88,7 @@
       <div class="features-section">
         <div class="features-content">
           <h3>Daftar Pembagian Rute</h3>
-          <router-link to="/daftar-trayek" class="view-button">Lihat</router-link>
+          <router-link to="/trayekGov" class="view-button">Lihat</router-link>
         </div>
       </div>
     </main>
@@ -269,7 +228,6 @@ export default {
 </script>
 
 <style scoped>
-
 .map {
   width: 100%;
   height: 100%; /* Ensure the map fills the card */
@@ -399,119 +357,53 @@ export default {
   color: #ff4040;
 }
 
+/* Main Content */
 .main-content {
   flex: 1;
-  background-color: #f3f7fa;
-  padding: 24px;
+  background-color: #f0f4f7;
+  padding: 20px;
   overflow-y: auto;
 }
 
-/* Header */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  position: relative;
-}
-
-.page-title {
-  font-size: 28px;
-  color: #2c3e50;
-  margin: 0;
-  font-weight: 600;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-
-/* Bagian Chart */
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-/* Kartu detail (Chart) */
-.details-card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 14px;
-  height: 330px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-.details-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.details-card h3 {
-  margin: 0 0 16px 0;
-  color: #2c3e50;
-  font-size: 18px;
-  font-weight: 600;
-  position: relative;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-canvas {
-  width: 100% !important;
-  height: calc(100% - 40px) !important;
-  flex-grow: 1;
+  margin-bottom: 20px;
 }
 
 /* Fitur Menarik */
 .features-section {
-  padding: 20px;
+  margin-top: 20px; /* Jarak atas untuk fitur menarik */
+  padding: 15px;
   background-color: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 24px;
-  transition: all 0.3s ease;
-}
-
-.features-section:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
 }
 
 .features-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.features-content h3 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 18px;
-  font-weight: 600;
+  justify-content: space-between; /* Memastikan tulisan dan tombol berada di sisi yang berbeda */
+  align-items: center; /* Vertikal center */
 }
 
 .view-button {
   display: inline-block;
-  padding: 10px 24px;
-  background: linear-gradient(90deg, #5b9bd5, #3b82bf);
+  padding: 10px 15px;
+  background-color: #5b9bd5;
   color: white;
   text-decoration: none;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(91, 155, 213, 0.3);
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.2s; /* Transisi saat hover */
 }
 
 .view-button:hover {
-  background: linear-gradient(90deg, #3b82bf, #2c6aa9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(91, 155, 213, 0.5);
+  background-color: #3b82bf; /* Warna saat hover */
+  transform: scale(1.05); /* Efek zoom saat hover */
 }
 
-/* Modal */
+/* Popup */
 .modal {
   position: fixed;
   top: 0;
@@ -523,7 +415,23 @@ canvas {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 @keyframes fadeIn {
@@ -531,101 +439,86 @@ canvas {
   to { opacity: 1; }
 }
 
-.modal-content {
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 14px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.modal-content h2 {
-  margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-}
-
 .close {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  font-size: 24px;
-  color: #7f8c8d;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer; /* Menambahkan kursor pointer */
 }
 
-.close:hover {
-  color: #e74c3c;
-  transform: scale(1.1);
+.close:hover,
+.close:focus {
+  color: #000; /* Mengubah warna saat hover */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  background-color: #5b9bd5; /* Warna tombol */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px; /* Menambahkan border-radius pada tombol */
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transisi saat hover */
+}
+
+button:hover {
+  background-color: #3b82bf; /* Warna saat hover */
 }
 
 /* Form dalam modal */
-.form-group {
-  margin-bottom: 20px;
+.modal-content form {
+  display: flex;
+  flex-direction: column;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #2c3e50;
+.modal-content label {
+  margin-bottom: 5px; /* Jarak antara label dan input */
+  font-weight: bold; /* Menebalkan label */
 }
 
-.form-group input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #dfe4ea;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.3s ease;
+.modal-content input,
+.modal-content select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px; /* Jarak antar elemen form */
 }
 
-.form-group input:focus {
-  border-color: #5b9bd5;
-  box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
-  outline: none;
+/* Bagian Chart */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px; /* Jarak atas untuk grafik */
+  margin-bottom: 20px; /* Jarak bawah untuk grafik */
 }
 
-.submit-btn {
-  background: linear-gradient(90deg, #5b9bd5, #3b82bf);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  margin-top: 10px;
-  box-shadow: 0 2px 8px rgba(91, 155, 213, 0.3);
-}
-
-.submit-btn:hover {
-  background: linear-gradient(90deg, #3b82bf, #2c6aa9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(91, 155, 213, 0.5);
-}
-
-/* Responsive */
+/* Responsive untuk tampilan mobile */
 @media (max-width: 768px) {
   .charts-grid {
     grid-template-columns: 1fr;
   }
-  
-  .details-card {
-    height: 300px;
-  }
+}
+
+/* Kartu detail (Chart) */
+.details-card {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  height: 300px; /* Adjust height as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align items to the top */
+  overflow: hidden; /* Hide overflow */
+}
+
+canvas {
+  width: 100% !important; /* Ensure canvas fills the width */
+  height: 100% !important; /* Ensure canvas fills the height */
+  flex-grow: 1; /* Allow canvas to grow */
 }
 </style>
