@@ -35,63 +35,73 @@
 
     <div class="table-container">
       <table class="data-table">
-        <thead>
-          <tr>
-            <th @click="sortBy('name')" class="sortable-header">
-              <div class="th-content">
-                <span>Nama Pengguna</span>
-                <span class="sort-icon" v-if="sortField === 'name'">
-                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                </span>
-              </div>
-            </th>
-            <th @click="sortBy('email')" class="sortable-header">
-              <div class="th-content">
-                <span>Email</span>
-                <span class="sort-icon" v-if="sortField === 'email'">
-                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                </span>
-              </div>
-            </th>
-            <th @click="sortBy('date_of_birth')" class="sortable-header">
-              <div class="th-content">
-                <span>Tanggal Lahir</span>
-                <span class="sort-icon" v-if="sortField === 'date_of_birth'">
-                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
-                </span>
-              </div>
-            </th>
-            <th class="action-header">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(user, index) in sortedFilteredUsers" :key="user.id" :class="{ 'odd-row': index % 2 !== 0 }">
-            <td>
-              <div class="user-info">
-                <div class="user-avatar">{{ getUserInitials(user.name) }}</div>
-                <span>{{ user.name }}</span>
-              </div>
-            </td>
-            <td>{{ user.email }}</td>
-            <td>{{ formatDate(user.date_of_birth) }}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="delete-button" @click="showDeletePopup(user)">
-                  <span class="button-icon">🗑️</span>
-                  Hapus
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr v-if="filteredUsers.length === 0">
-            <td colspan="4" class="no-data">
-              <div class="no-data-message">
-                <div class="no-data-icon">🔍</div>
-                <div>Data tidak ditemukan.</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+<thead>
+  <tr>
+    <th @click="sortBy('name')" class="sortable-header">
+      <div class="th-content">
+        <span>Nama Pengguna</span>
+        <span class="sort-icon" v-if="sortField === 'name'">
+          {{ sortDirection === 'asc' ? '↑' : '↓' }}
+        </span>
+      </div>
+    </th>
+    <th @click="sortBy('email')" class="sortable-header">
+      <div class="th-content">
+        <span>Email</span>
+        <span class="sort-icon" v-if="sortField === 'email'">
+          {{ sortDirection === 'asc' ? '↑' : '↓' }}
+        </span>
+      </div>
+    </th>
+    <th @click="sortBy('date_of_birth')" class="sortable-header">
+      <div class="th-content">
+        <span>Tanggal Lahir</span>
+        <span class="sort-icon" v-if="sortField === 'date_of_birth'">
+          {{ sortDirection === 'asc' ? '↑' : '↓' }}
+        </span>
+      </div>
+    </th>
+    <th @click="sortBy('age')" class="sortable-header">
+      <div class="th-content">
+        <span>Umur</span>
+        <span class="sort-icon" v-if="sortField === 'age'">
+          {{ sortDirection === 'asc' ? '↑' : '↓' }}
+        </span>
+      </div>
+    </th>
+    <th class="action-header">Aksi</th>
+  </tr>
+</thead>
+<tbody>
+  <tr v-for="(user, index) in sortedFilteredUsers" :key="user.id" :class="{ 'odd-row': index % 2 !== 0 }">
+    <td>
+      <div class="user-info">
+        <div class="user-avatar">{{ getUserInitials(user.name) }}</div>
+        <span>{{ user.name }}</span>
+      </div>
+    </td>
+    <td>{{ user.email }}</td>
+    <td>{{ formatDate(user.date_of_birth) }}</td>
+    <td>{{ user.age }}</td>
+    <td>
+      <div class="action-buttons">
+        <button class="delete-button" @click="showDeletePopup(user)">
+          <span class="button-icon">🗑️</span>
+          Hapus
+        </button>
+      </div>
+    </td>
+  </tr>
+  <tr v-if="filteredUsers.length === 0">
+    <td colspan="5" class="no-data">
+      <div class="no-data-message">
+        <div class="no-data-icon">🔍</div>
+        <div>Data tidak ditemukan.</div>
+      </div>
+    </td>
+  </tr>
+</tbody>
+
       </table>
     </div>
 
@@ -312,23 +322,31 @@ export default {
       }
     },
 
-    sortUsers(users) {
-      return [...users].sort((a, b) => {
-        let fieldA = a[this.sortField];
-        let fieldB = b[this.sortField];
-        
-        if (this.sortField === 'date_of_birth') {
-          fieldA = new Date(fieldA);
-          fieldB = new Date(fieldB);
-        }
+sortUsers(users) {
+  return [...users].sort((a, b) => {
+    let fieldA = a[this.sortField];
+    let fieldB = b[this.sortField];
 
-        if (this.sortDirection === "asc") {
-          return fieldA > fieldB ? 1 : -1;
-        } else {
-          return fieldA < fieldB ? 1 : -1;
-        }
-      });
-    },
+    // Khusus field tanggal lahir
+    if (this.sortField === 'date_of_birth') {
+      fieldA = new Date(fieldA);
+      fieldB = new Date(fieldB);
+    }
+
+    // Khusus umur, pastikan diurutkan sebagai angka
+    if (this.sortField === 'age') {
+      fieldA = Number(fieldA);
+      fieldB = Number(fieldB);
+    }
+
+    if (this.sortDirection === "asc") {
+      return fieldA > fieldB ? 1 : -1;
+    } else {
+      return fieldA < fieldB ? 1 : -1;
+    }
+  });
+},
+
 
     nextPage() {
       if (this.currentPage < this.totalPages) {

@@ -133,9 +133,9 @@
     </section>
 
       <!-- Tombol Unduh Laporan -->
-      <section class="download-section">
+      <!-- <section class="download-section">
         <button @click="downloadReport">Unduh Laporan</button>
-      </section>
+      </section> -->
 
       <!-- Elemen untuk Tampilan Cetak -->
       <div id="printableArea" style="display: none;">

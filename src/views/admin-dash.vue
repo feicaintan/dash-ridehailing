@@ -135,7 +135,7 @@
           class="logo-image-section"
         />
       </div>
-      <div class="overview-card">
+      <!-- <div class="overview-card">
         <p>Total Rute</p>
         <h3>{{ stats.routes }}</h3>
         <img
@@ -143,16 +143,16 @@
           alt="Logo DriverPlus"
           class="logo-image-section"
         />
-      </div>
+      </div> -->
     </section>
 
       <div class="details-card" style="height: 300px">
-        <h3 style="font-size: 14px">Grafik Rata-rata Umur Penumpang</h3>
+        <h3 style="font-size: 14px">Grafik Rata-rata Umur Pengguna</h3>
         <canvas id="passengerAgeChart" style="max-height: 250px"></canvas>
       </div>
 
       <div class="details-card" style="height: 400px">
-        <h3>Peta Lalu Lintas Manado</h3>
+        <h3>Peta Lokasi</h3>
         <div id="trafficMap" style="height: 350px"></div>
       </div>
 
@@ -229,6 +229,8 @@ export default {
         { id: 1, name: "Daniel", location: [1.4748, 124.8421], status: "online" },
         { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
       ],
+      // Data dummy 100 driver di sekitar Manado
+      dummyDrivers: this.generateManadobDrivers(),
       driversList: [],
       activeMenu: "admin-dash",
       reviews: [],
@@ -236,6 +238,10 @@ export default {
         labels: [],
         values: [],
       },
+      // Untuk menyimpan referensi map dan markers
+      map: null,
+      markers: {},
+      wsConnection: null,
     };
   },
   mounted() {
@@ -243,7 +249,76 @@ export default {
     this.fetchPassengerAgeData()
     this.initTrafficMap();
   },
+  beforeUnmount() {
+    // Cleanup WebSocket connection
+    if (this.wsConnection) {
+      this.wsConnection.close();
+    }
+  },
   methods: {
+    // Method untuk generate 100 driver di sekitar Manado
+    generateManadobDrivers() {
+      const drivers = [];
+      const firstNames = [
+        "Daniel", "Kevin", "Maria", "Robert", "Jefry", "Linda", "Grace", "David", "Rina", "Bobby",
+        "Samuel", "Sari", "Michael", "Diana", "Steven", "Yenny", "Richard", "Meiske", "Jonathan", "Vivi",
+        "Andreas", "Stella", "Benny", "Fenny", "Charles", "Mercy", "Ronald", "Jessy", "William", "Indy",
+        "Albert", "Novi", "Franklin", "Sisca", "Frederik", "Maya", "Gabriel", "Nelly", "Herman", "Olvy",
+        "Ivan", "Pinkan", "Julien", "Queency", "Kevin", "Ratna", "Leonardo", "Sandy", "Mario", "Tina",
+        "Nelson", "Ully", "Oscar", "Vonny", "Petrus", "Winny", "Quentin", "Xenia", "Rudolf", "Yolanda",
+        "Stanley", "Zelda", "Thomas", "Agnes", "Urbanus", "Beatrice", "Victor", "Christy", "Willy", "Desy",
+        "Xavier", "Ester", "Yohanes", "Ferly", "Zachary", "Gloria", "Alfons", "Henny", "Brian", "Irene",
+        "Claudio", "Jenny", "Danny", "Kelly", "Edwin", "Lucy", "Ferdinand", "Merry", "George", "Nancy"
+      ];
+      
+      const lastNames = [
+        "Simbolon", "Mandagi", "Sondakh", "Pangkey", "Kalangi", "Rompies", "Tumundo", "Rumondor", "Mantiri", "Kaunang",
+        "Londong", "Waworuntu", "Tompodung", "Sumampouw", "Kawatu", "Tinggogoy", "Lumentut", "Mamahit", "Najoan", "Salampessy",
+        "Tooy", "Uneputty", "Wagey", "Kandouw", "Lengkong", "Mokoginta", "Nangoy", "Ompi", "Pontoh", "Rarung",
+        "Salinding", "Taroreh", "Umboh", "Wenas", "Xamena", "Yaputra", "Zombow", "Adoe", "Bawole", "Corolya",
+        "Datu", "Engkeng", "Foenay", "Gerung", "Harianja", "Inkiriwang", "Jansen", "Kolondam", "Lasut", "Mamentu"
+      ];
+
+      const routes = [
+        "Manado-Kawangkaren", "Pusat Kota", "Manado-Tomohon", "Manado-Bitung", "Wenang", "Tikala",
+        "Wanea", "Sario", "Singkil", "Paal Dua", "Malalayang", "Bailang", "Bunaken", "Mapanget",
+        "Winangun", "Mahakeret", "Tuminting", "Kleak", "Paniki", "Kairagi", "Bahu", "Molas",
+        "Calaca", "Rap-Rap", "Tanahwangko", "Tombulu", "Karombasan", "Ranotana", "Kombos", "Paslaten"
+      ];
+
+      const statuses = ["online", "offline", "busy"];
+
+      // Koordinat batas area Manado dan sekitarnya
+      const manadoBounds = {
+        north: 1.52,    // Utara Manado
+        south: 1.42,    // Selatan Manado  
+        west: 124.78,   // Barat Manado
+        east: 124.90    // Timur Manado
+      };
+
+      for (let i = 1; i <= 100; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const route = routes[Math.floor(Math.random() * routes.length)];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+        // Generate koordinat random dalam batas Manado
+        const lat = manadoBounds.south + (Math.random() * (manadoBounds.north - manadoBounds.south));
+        const lng = manadoBounds.west + (Math.random() * (manadoBounds.east - manadoBounds.west));
+
+        drivers.push({
+          id: i,
+          name: `${firstName} ${lastName}`,
+          lat: parseFloat(lat.toFixed(6)),
+          lng: parseFloat(lng.toFixed(6)),
+          status: status,
+          route: route
+        });
+      }
+
+      return drivers;
+    },
+
     async fetchPassengerAgeData() {
       const token = localStorage.getItem("access_token");
       if (!token) return console.error("Token tidak ditemukan di localStorage (access_token)");
@@ -268,48 +343,47 @@ export default {
 
         this.initPassengerAgeChart();
       } catch (err) {
-        console.error("Gagal mengambil data umur penumpang:", err);
+        console.error("Gagal mengambil data umur Pengguna:", err);
         this.initPassengerAgeChart();
       }
     },
 
     processAgeData(users) {
-  const ageGroups = {
-    "< 18": 0,
-    "18-24": 0,
-    "25-34": 0,
-    "35-44": 0,
-    "45-54": 0,
-    "55+": 0,
-  };
+      const ageGroups = {
+        "< 18": 0,
+        "18-24": 0,
+        "25-34": 0,
+        "35-44": 0,
+        "45-54": 0,
+        "55+": 0,
+      };
 
+      const today = new Date();
 
-  const today = new Date();
+      users.forEach((user) => {
+        if (!user.date_of_birth) return;
 
-  users.forEach((user) => {
-    if (!user.date_of_birth) return;
+        const dob = new Date(user.date_of_birth);
+        if (isNaN(dob)) return;
 
-    const dob = new Date(user.date_of_birth);
-    if (isNaN(dob)) return;
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
 
-    let age = today.getFullYear() - dob.getFullYear();
-    const monthDiff = today.getMonth() - dob.getMonth();
-    const dayDiff = today.getDate() - dob.getDate();
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          age--;
+        }
 
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-      age--;
-    }
+        if (age < 18) ageGroups["< 18"]++;
+        else if (age < 25) ageGroups["18-24"]++;
+        else if (age < 35) ageGroups["25-34"]++;
+        else if (age < 45) ageGroups["35-44"]++;
+        else if (age < 55) ageGroups["45-54"]++;
+        else ageGroups["55+"]++;
+      });
 
-    if (age < 18) ageGroups["< 18"]++;
-    else if (age < 25) ageGroups["18-24"]++;
-    else if (age < 35) ageGroups["25-34"]++;
-    else if (age < 45) ageGroups["35-44"]++;
-    else if (age < 55) ageGroups["45-54"]++;
-    else ageGroups["55+"]++;
-  });
-
-  return ageGroups;
-},
+      return ageGroups;
+    },
 
     initPassengerAgeChart() {
       const canvas = document.getElementById("passengerAgeChart");
@@ -320,7 +394,7 @@ export default {
         ctx.font = "16px Arial";
         ctx.fillStyle = "#666";
         ctx.textAlign = "center";
-        ctx.fillText("Tidak ada data umur penumpang tersedia", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("Tidak ada data umur Pengguna tersedia", canvas.width / 2, canvas.height / 2);
         return;
       }
 
@@ -329,7 +403,7 @@ export default {
         data: {
           labels: this.passengerAgeData.labels,
           datasets: [{
-            label: "Jumlah Penumpang",
+            label: "Jumlah Pengguna",
             data: this.passengerAgeData.values,
             backgroundColor: "rgba(54, 162, 235, 0.7)",
             borderColor: "rgba(54, 162, 235, 1)",
@@ -341,7 +415,7 @@ export default {
           plugins: {
             title: {
               display: true,
-              text: "Distribusi Umur Penumpang",
+              text: "Distribusi Umur Pengguna",
             },
             tooltip: {
               mode: "index",
@@ -352,7 +426,7 @@ export default {
           scales: {
             y: {
               beginAtZero: true,
-              title: { display: true, text: "Jumlah Penumpang" },
+              title: { display: true, text: "Jumlah Pengguna" },
             },
             x: {
               title: { display: true, text: "Kelompok Umur" },
@@ -361,7 +435,168 @@ export default {
         },
       });
     },
- 
+
+    // Method untuk mendapatkan warna berdasarkan status
+    getStatusColor(status) {
+      switch(status) {
+        case 'online': return '#28a745';
+        case 'offline': return '#dc3545';
+        case 'busy': return '#ffc107';
+        default: return '#6c757d';
+      }
+    },
+
+    // Method untuk mendapatkan text status
+    getStatusText(status) {
+      switch(status) {
+        case 'online': return 'Online';
+        case 'offline': return 'Offline';
+        case 'busy': return 'Sibuk';
+        default: return 'Unknown';
+      }
+    },
+
+    // Method untuk menambahkan data dummy driver ke map
+    addDummyDriversToMap() {
+      if (!this.map) return;
+
+      console.log(`Menambahkan ${this.dummyDrivers.length} driver ke peta...`);
+
+      this.dummyDrivers.forEach((driver, index) => {
+        const color = this.getStatusColor(driver.status);
+        
+        // Create custom icon dengan ukuran lebih kecil untuk banyak marker
+        const icon = L.divIcon({
+          className: 'custom-driver-icon',
+          html: `
+            <div style="
+              background-color: ${color};
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              border: 2px solid white;
+              box-shadow: 0 0 3px rgba(0,0,0,0.5);
+            "></div>
+          `,
+          iconSize: [12, 12],
+          iconAnchor: [6, 6]
+        });
+        
+        // Create marker
+        const marker = L.marker([driver.lat, driver.lng], { icon }).addTo(this.map);
+        
+        // Create popup content
+        const popupContent = `
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-width: 150px;">
+            <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
+            <div style="font-size: 12px; color: #6c757d; margin-bottom: 3px;">Rute: ${driver.route}</div>
+            <div style="font-size: 11px; color: #868e96; margin-bottom: 5px;">
+              Lokasi: ${driver.lat.toFixed(4)}, ${driver.lng.toFixed(4)}
+            </div>
+            <div style="margin-top: 5px;">
+              <span style="
+                font-size: 11px;
+                padding: 2px 6px;
+                border-radius: 8px;
+                background-color: ${color};
+                color: white;
+                display: inline-block;
+              ">
+                ${this.getStatusText(driver.status)}
+              </span>
+            </div>
+          </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        this.markers[driver.id] = marker;
+      });
+
+      console.log(`Berhasil menambahkan ${Object.keys(this.markers).length} marker ke peta`);
+    },
+
+    // Method untuk simulasi pergerakan driver (opsional)
+    simulateDriverMovement() {
+      setInterval(() => {
+        this.dummyDrivers.forEach(driver => {
+          // Simulasi pergerakan kecil (dalam batas area Manado)
+          const moveDistance = 0.0008; // Sekitar 80 meter
+          
+          // Batas area Manado untuk mencegah driver keluar dari area
+          const bounds = {
+            north: 1.52,
+            south: 1.42,
+            west: 124.78,
+            east: 124.90
+          };
+          
+          // Generate pergerakan random tapi tetap dalam batas
+          let newLat = driver.lat + (Math.random() - 0.5) * moveDistance;
+          let newLng = driver.lng + (Math.random() - 0.5) * moveDistance;
+          
+          // Pastikan tidak keluar dari batas Manado
+          newLat = Math.max(bounds.south, Math.min(bounds.north, newLat));
+          newLng = Math.max(bounds.west, Math.min(bounds.east, newLng));
+          
+          driver.lat = parseFloat(newLat.toFixed(6));
+          driver.lng = parseFloat(newLng.toFixed(6));
+          
+          // Kadang-kadang ubah status (probabilitas lebih kecil untuk menghindari perubahan terlalu sering)
+          if (Math.random() < 0.02) { // 2% chance
+            const statuses = ['online', 'busy', 'offline'];
+            driver.status = statuses[Math.floor(Math.random() * statuses.length)];
+          }
+          
+          // Update marker di map
+          const marker = this.markers[driver.id];
+          if (marker) {
+            const color = this.getStatusColor(driver.status);
+            const icon = L.divIcon({
+              className: 'custom-driver-icon',
+              html: `
+                <div style="
+                  background-color: ${color};
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 50%;
+                  border: 2px solid white;
+                  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+                "></div>
+              `,
+              iconSize: [12, 12],
+              iconAnchor: [6, 6]
+            });
+            
+            marker.setLatLng([driver.lat, driver.lng]);
+            marker.setIcon(icon);
+            
+            // Update popup content
+            const popupContent = `
+              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-width: 150px;">
+                <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
+                <div style="font-size: 12px; color: #6c757d; margin-bottom: 3px;">Rute: ${driver.route}</div>
+                <div style="font-size: 11px; color: #868e96; margin-bottom: 5px;">
+                  Lokasi: ${driver.lat.toFixed(4)}, ${driver.lng.toFixed(4)}
+                </div>
+                <div style="margin-top: 5px;">
+                  <span style="
+                    font-size: 11px;
+                    padding: 2px 6px;
+                    border-radius: 8px;
+                    background-color: ${color};
+                    color: white;
+                    display: inline-block;
+                  ">
+                    ${this.getStatusText(driver.status)}
+                  </span>
+                </div>
+              </div>
+            `;
+            marker.setPopupContent(popupContent);
+          }
+        });
+      }, 8000); // Update setiap 8 detik untuk mengurangi beban
+    },
 
     initTrafficMap() {
       if (typeof L === "undefined") {
@@ -369,32 +604,65 @@ export default {
         return;
       }
 
-      const map = L.map("trafficMap").setView(this.mapCenter, 11);
+      this.map = L.map("trafficMap").setView(this.mapCenter, 12); // Zoom out sedikit untuk melihat semua driver
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
+      }).addTo(this.map);
 
-      Object.entries(this.trafficDensity).forEach(([route, density]) => {
-        const color = density === "Padat" ? "red" : density === "Sedang" ? "orange" : "green";
+      // Tambahkan data dummy driver ke map
+      this.addDummyDriversToMap();
+      
+      // Mulai simulasi pergerakan (opsional)
+      this.simulateDriverMovement();
 
-        L.circle(this.mapCenter, {
-          color,
-          fillColor: color,
-          fillOpacity: 0.3,
-          radius: 1500,
-        }).bindPopup(`${route}: ${density}`).addTo(map);
-      });
+      // Track marker berdasarkan user_id dari WebSocket (tetap ada untuk data real)
+      try {
+        this.wsConnection = new WebSocket("ws://188.166.179.146:8000/api/tracking/ws/location");
 
-      this.activeDrivers.forEach((driver) => {
-        const icon = L.divIcon({
-          className: "driver-marker",
-          html: `<div style="background-color: ${driver.status === "online" ? "green" : "red"}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
-          iconSize: [20, 20],
-        });
+        this.wsConnection.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            const { user_id, name, lat, lng, status } = data;
 
-        L.marker(driver.location, { icon }).bindPopup(`${driver.name} - Status: ${driver.status}`).addTo(map);
-      });
+            const icon = L.divIcon({
+              className: "custom-driver-icon",
+              html: `
+                <div style="
+                  background-color: ${status === 'online' ? 'green' : 'red'};
+                  width: 16px;
+                  height: 16px;
+                  border-radius: 50%;
+                  border: 3px solid white;
+                  box-shadow: 0 0 5px rgba(0,0,0,0.7);
+                "></div>
+              `,
+              iconSize: [16, 16],
+              iconAnchor: [8, 8],
+            });
+
+            if (this.markers[`real_${user_id}`]) {
+              // Update posisi & ikon marker real
+              this.markers[`real_${user_id}`].setLatLng([lat, lng]);
+              this.markers[`real_${user_id}`].setIcon(icon);
+              this.markers[`real_${user_id}`].setPopupContent(`${name} - Status: ${status} (Real-time)`);
+            } else {
+              // Buat marker baru untuk data real (dengan border lebih tebal untuk membedakan)
+              const marker = L.marker([lat, lng], { icon }).addTo(this.map);
+              marker.bindPopup(`${name} - Status: ${status} (Real-time)`);
+              this.markers[`real_${user_id}`] = marker;
+            }
+          } catch (err) {
+            console.error("Data WebSocket tidak valid:", err);
+          }
+        };
+
+        this.wsConnection.onerror = (err) => {
+          console.error("WebSocket error:", err);
+        };
+      } catch (err) {
+        console.error("Gagal membuat koneksi WebSocket:", err);
+      }
     },
 
     async fetchDashboardStats() {
@@ -474,10 +742,33 @@ export default {
     setActiveMenu(menuItem) {
       this.activeMenu = menuItem;
     },
+
+    // Method tambahan untuk mendapatkan statistik driver berdasarkan status
+    getDriverStats() {
+      const online = this.dummyDrivers.filter(d => d.status === 'online').length;
+      const busy = this.dummyDrivers.filter(d => d.status === 'busy').length;
+      const offline = this.dummyDrivers.filter(d => d.status === 'offline').length;
+      
+      return {
+        total: this.dummyDrivers.length,
+        online,
+        busy,
+        offline
+      };
+    },
+
+    // Method untuk mendapatkan driver berdasarkan status
+    getDriversByStatus(status) {
+      return this.dummyDrivers.filter(d => d.status === status);
+    },
+
+    // Method untuk mendapatkan driver berdasarkan rute
+    getDriversByRoute(route) {
+      return this.dummyDrivers.filter(d => d.route === route);
+    },
   },
 };
 </script>
-
 
 <style scoped>
 .dashboard-container {

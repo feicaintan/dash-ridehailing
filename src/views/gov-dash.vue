@@ -140,7 +140,7 @@
           class="logo-image-section"
         />
       </div>
-      <div class="overview-card">
+      <!-- <div class="overview-card">
         <p>Total Rute</p>
         <h3>{{ stats.routes }}</h3>
         <img
@@ -148,16 +148,16 @@
           alt="Logo DriverPlus"
           class="logo-image-section"
         />
-      </div>
+      </div> -->
     </section>
 
       <div class="details-card" style="height: 300px">
-        <h3 style="font-size: 14px">Grafik Rata-rata Umur Penumpang</h3>
+        <h3 style="font-size: 14px">Grafik Rata-rata Umur Pengguna</h3>
         <canvas id="passengerAgeChart" style="max-height: 250px"></canvas>
       </div>
 
       <div class="details-card" style="height: 400px">
-        <h3>Peta Lalu Lintas Manado</h3>
+        <h3>Peta Lokasi</h3>
         <div id="trafficMap" style="height: 350px"></div>
       </div>
 
@@ -273,7 +273,7 @@ export default {
 
         this.initPassengerAgeChart();
       } catch (err) {
-        console.error("Gagal mengambil data umur penumpang:", err);
+        console.error("Gagal mengambil data umur Pengguna:", err);
         this.initPassengerAgeChart();
       }
     },
@@ -325,7 +325,7 @@ export default {
         ctx.font = "16px Arial";
         ctx.fillStyle = "#666";
         ctx.textAlign = "center";
-        ctx.fillText("Tidak ada data umur penumpang tersedia", canvas.width / 2, canvas.height / 2);
+        ctx.fillText("Tidak ada data umur Pengguna tersedia", canvas.width / 2, canvas.height / 2);
         return;
       }
 
@@ -334,7 +334,7 @@ export default {
         data: {
           labels: this.passengerAgeData.labels,
           datasets: [{
-            label: "Jumlah Penumpang",
+            label: "Jumlah Pengguna",
             data: this.passengerAgeData.values,
             backgroundColor: "rgba(54, 162, 235, 0.7)",
             borderColor: "rgba(54, 162, 235, 1)",
@@ -346,7 +346,7 @@ export default {
           plugins: {
             title: {
               display: true,
-              text: "Distribusi Umur Penumpang",
+              text: "Distribusi Umur Pengguna",
             },
             tooltip: {
               mode: "index",
@@ -357,7 +357,7 @@ export default {
           scales: {
             y: {
               beginAtZero: true,
-              title: { display: true, text: "Jumlah Penumpang" },
+              title: { display: true, text: "Jumlah Pengguna" },
             },
             x: {
               title: { display: true, text: "Kelompok Umur" },
@@ -368,39 +368,64 @@ export default {
     },
  
 
-    initTrafficMap() {
-      if (typeof L === "undefined") {
-        console.error("Leaflet tidak ditemukan");
-        return;
+initTrafficMap() {
+  if (typeof L === "undefined") {
+    console.error("Leaflet tidak ditemukan");
+    return;
+  }
+
+  const map = L.map("trafficMap").setView(this.mapCenter, 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+  }).addTo(map);
+
+  // Track marker berdasarkan user_id
+  const markers = {};
+
+  const ws = new WebSocket("ws://188.166.179.146:8000/api/tracking/ws/location");
+
+  ws.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      const { user_id, name, lat, lng, status } = data;
+
+      const icon = L.divIcon({
+        className: "custom-driver-icon",
+        html: `
+          <div style="
+            background-color: ${status === 'online' ? 'green' : 'red'};
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+          "></div>
+        `,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+      });
+
+      if (markers[user_id]) {
+        // Update posisi & ikon marker
+        markers[user_id].setLatLng([lat, lng]);
+        markers[user_id].setIcon(icon);
+        markers[user_id].setPopupContent(`${name} - Status: ${status}`);
+      } else {
+        // Buat marker baru
+        const marker = L.marker([lat, lng], { icon }).addTo(map);
+        marker.bindPopup(`${name} - Status: ${status}`);
+        markers[user_id] = marker;
       }
+    } catch (err) {
+      console.error("Data WebSocket tidak valid:", err);
+    }
+  };
 
-      const map = L.map("trafficMap").setView(this.mapCenter, 11);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
-
-      Object.entries(this.trafficDensity).forEach(([route, density]) => {
-        const color = density === "Padat" ? "red" : density === "Sedang" ? "orange" : "green";
-
-        L.circle(this.mapCenter, {
-          color,
-          fillColor: color,
-          fillOpacity: 0.3,
-          radius: 1500,
-        }).bindPopup(`${route}: ${density}`).addTo(map);
-      });
-
-      this.activeDrivers.forEach((driver) => {
-        const icon = L.divIcon({
-          className: "driver-marker",
-          html: `<div style="background-color: ${driver.status === "online" ? "green" : "red"}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
-          iconSize: [20, 20],
-        });
-
-        L.marker(driver.location, { icon }).bindPopup(`${driver.name} - Status: ${driver.status}`).addTo(map);
-      });
-    },
+  ws.onerror = (err) => {
+    console.error("WebSocket error:", err);
+  };
+},
 
     async fetchDashboardStats() {
       const token = localStorage.getItem("access_token");

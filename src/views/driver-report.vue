@@ -15,7 +15,7 @@
           <input
             v-model="search"
             type="text"
-            placeholder="Cari penumpang atau driver..."
+            placeholder="Cari Pengguna atau driver..."
             class="search-input"
           />
         </div>
