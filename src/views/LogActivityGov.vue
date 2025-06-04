@@ -170,7 +170,7 @@ export default {
       this.loading = true;
       try {
         const token = localStorage.getItem("access_token");
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/histories", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/histories", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -206,7 +206,7 @@ export default {
     async fetchActiveDrivers() {
       try {
         const token = localStorage.getItem("access_token");
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",

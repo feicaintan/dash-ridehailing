@@ -216,7 +216,7 @@ export default {
         timeout: null
       },
       drivers: [],
-      apiUrl: "http://188.166.179.146:8000/api/dashboard/drivers",
+      apiUrl: "https://mikronet.systems/api/dashboard/drivers",
       sortField: "name",
       sortDirection: "asc",
       currentPage: 1,
@@ -363,7 +363,7 @@ export default {
           Authorization: `Bearer ${token}`,
         };
 
-        const blockUrl = `http://188.166.179.146:8000/api/dashboard/block/${driver.id}`;
+        const blockUrl = `https://mikronet.systems/api/dashboard/block/${driver.id}`;
         console.log("Block URL:", blockUrl);
         console.log("Memblokir driver dengan ID:", driver.id);
         console.log("Jumlah driver sebelum block:", this.drivers.length);

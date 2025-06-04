@@ -160,7 +160,7 @@ export default {
   methods: {
     fetchRouteDataAndInitCharts() {
       const token = localStorage.getItem('access_token');
-      fetch('http://188.166.179.146:8000/api/dashboard/reports?month=2', {
+      fetch('https://mikronet.systems/api/dashboard/reports?month=2', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

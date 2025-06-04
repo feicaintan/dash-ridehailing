@@ -200,7 +200,7 @@ export default {
         timeout: null
       },
       drivers: [],
-      apiUrl: "http://188.166.179.146:8000/api/dashboard/drivers",
+      apiUrl: "https://mikronet.systems/api/dashboard/drivers",
       sortField: "name",
       sortDirection: "asc",
       currentPage: 1,

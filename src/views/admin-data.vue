@@ -225,7 +225,7 @@ export default {
     async fetchDrivers() {
       const token = localStorage.getItem("access_token");
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -248,7 +248,7 @@ export default {
     async fetchUsers() {
       const token = localStorage.getItem("access_token");
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/users", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

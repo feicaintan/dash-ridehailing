@@ -229,8 +229,19 @@ export default {
         { id: 1, name: "Daniel", location: [1.4748, 124.8421], status: "online" },
         { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
       ],
-      // Data dummy 100 driver di sekitar Manado
-      dummyDrivers: this.generateManadobDrivers(),
+      // Data dummy driver yang lebih lengkap
+      dummyDrivers: [
+        { id: 1, name: "Daniel Simbolon", lat: 1.4748, lng: 124.8421, status: "online", route: "Manado-Kawangkaren" },
+        { id: 2, name: "Kevin Mandagi", lat: 1.4700, lng: 124.8500, status: "offline", route: "Pusat Kota" },
+        { id: 3, name: "Maria Sondakh", lat: 1.4800, lng: 124.8350, status: "busy", route: "Manado-Tomohon" },
+        { id: 4, name: "Robert Pangkey", lat: 1.4650, lng: 124.8600, status: "online", route: "Manado-Bitung" },
+        { id: 6, name: "Jefry Kalangi", lat: 1.4680, lng: 124.8480, status: "busy", route: "Wenang" },
+        { id: 7, name: "Linda Rompies", lat: 1.4750, lng: 124.8380, status: "online", route: "Tikala" },
+        { id: 9, name: "Grace Tumundo", lat: 1.4600, lng: 124.8650, status: "busy", route: "Wanea" },
+        { id: 10, name: "David Rumondor", lat: 1.4780, lng: 124.8450, status: "online", route: "Sario" },
+        { id: 11, name: "Rina Mantiri", lat: 1.4720, lng: 124.8320, status: "online", route: "Singkil" },
+        { id: 12, name: "Bobby Kaunang", lat: 1.4850, lng: 124.8550, status: "online", route: "Paal Dua" }
+      ],
       driversList: [],
       activeMenu: "admin-dash",
       reviews: [],
@@ -256,69 +267,6 @@ export default {
     }
   },
   methods: {
-    // Method untuk generate 100 driver di sekitar Manado
-    generateManadobDrivers() {
-      const drivers = [];
-      const firstNames = [
-        "Daniel", "Kevin", "Maria", "Robert", "Jefry", "Linda", "Grace", "David", "Rina", "Bobby",
-        "Samuel", "Sari", "Michael", "Diana", "Steven", "Yenny", "Richard", "Meiske", "Jonathan", "Vivi",
-        "Andreas", "Stella", "Benny", "Fenny", "Charles", "Mercy", "Ronald", "Jessy", "William", "Indy",
-        "Albert", "Novi", "Franklin", "Sisca", "Frederik", "Maya", "Gabriel", "Nelly", "Herman", "Olvy",
-        "Ivan", "Pinkan", "Julien", "Queency", "Kevin", "Ratna", "Leonardo", "Sandy", "Mario", "Tina",
-        "Nelson", "Ully", "Oscar", "Vonny", "Petrus", "Winny", "Quentin", "Xenia", "Rudolf", "Yolanda",
-        "Stanley", "Zelda", "Thomas", "Agnes", "Urbanus", "Beatrice", "Victor", "Christy", "Willy", "Desy",
-        "Xavier", "Ester", "Yohanes", "Ferly", "Zachary", "Gloria", "Alfons", "Henny", "Brian", "Irene",
-        "Claudio", "Jenny", "Danny", "Kelly", "Edwin", "Lucy", "Ferdinand", "Merry", "George", "Nancy"
-      ];
-      
-      const lastNames = [
-        "Simbolon", "Mandagi", "Sondakh", "Pangkey", "Kalangi", "Rompies", "Tumundo", "Rumondor", "Mantiri", "Kaunang",
-        "Londong", "Waworuntu", "Tompodung", "Sumampouw", "Kawatu", "Tinggogoy", "Lumentut", "Mamahit", "Najoan", "Salampessy",
-        "Tooy", "Uneputty", "Wagey", "Kandouw", "Lengkong", "Mokoginta", "Nangoy", "Ompi", "Pontoh", "Rarung",
-        "Salinding", "Taroreh", "Umboh", "Wenas", "Xamena", "Yaputra", "Zombow", "Adoe", "Bawole", "Corolya",
-        "Datu", "Engkeng", "Foenay", "Gerung", "Harianja", "Inkiriwang", "Jansen", "Kolondam", "Lasut", "Mamentu"
-      ];
-
-      const routes = [
-        "Manado-Kawangkaren", "Pusat Kota", "Manado-Tomohon", "Manado-Bitung", "Wenang", "Tikala",
-        "Wanea", "Sario", "Singkil", "Paal Dua", "Malalayang", "Bailang", "Bunaken", "Mapanget",
-        "Winangun", "Mahakeret", "Tuminting", "Kleak", "Paniki", "Kairagi", "Bahu", "Molas",
-        "Calaca", "Rap-Rap", "Tanahwangko", "Tombulu", "Karombasan", "Ranotana", "Kombos", "Paslaten"
-      ];
-
-      const statuses = ["online", "offline", "busy"];
-
-      // Koordinat batas area Manado dan sekitarnya
-      const manadoBounds = {
-        north: 1.52,    // Utara Manado
-        south: 1.42,    // Selatan Manado  
-        west: 124.78,   // Barat Manado
-        east: 124.90    // Timur Manado
-      };
-
-      for (let i = 1; i <= 100; i++) {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        const route = routes[Math.floor(Math.random() * routes.length)];
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-
-        // Generate koordinat random dalam batas Manado
-        const lat = manadoBounds.south + (Math.random() * (manadoBounds.north - manadoBounds.south));
-        const lng = manadoBounds.west + (Math.random() * (manadoBounds.east - manadoBounds.west));
-
-        drivers.push({
-          id: i,
-          name: `${firstName} ${lastName}`,
-          lat: parseFloat(lat.toFixed(6)),
-          lng: parseFloat(lng.toFixed(6)),
-          status: status,
-          route: route
-        });
-      }
-
-      return drivers;
-    },
-
     async fetchPassengerAgeData() {
       const token = localStorage.getItem("access_token");
       if (!token) return console.error("Token tidak ditemukan di localStorage (access_token)");
@@ -329,7 +277,7 @@ export default {
       };
 
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/users", {
           method: "GET",
           headers,
         });
@@ -460,26 +408,24 @@ export default {
     addDummyDriversToMap() {
       if (!this.map) return;
 
-      console.log(`Menambahkan ${this.dummyDrivers.length} driver ke peta...`);
-
-      this.dummyDrivers.forEach((driver, index) => {
+      this.dummyDrivers.forEach(driver => {
         const color = this.getStatusColor(driver.status);
         
-        // Create custom icon dengan ukuran lebih kecil untuk banyak marker
+        // Create custom icon
         const icon = L.divIcon({
           className: 'custom-driver-icon',
           html: `
             <div style="
               background-color: ${color};
-              width: 12px;
-              height: 12px;
+              width: 16px;
+              height: 16px;
               border-radius: 50%;
               border: 2px solid white;
-              box-shadow: 0 0 3px rgba(0,0,0,0.5);
+              box-shadow: 0 0 5px rgba(0,0,0,0.5);
             "></div>
           `,
-          iconSize: [12, 12],
-          iconAnchor: [6, 6]
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
         });
         
         // Create marker
@@ -487,12 +433,9 @@ export default {
         
         // Create popup content
         const popupContent = `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-width: 150px;">
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
             <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
-            <div style="font-size: 12px; color: #6c757d; margin-bottom: 3px;">Rute: ${driver.route}</div>
-            <div style="font-size: 11px; color: #868e96; margin-bottom: 5px;">
-              Lokasi: ${driver.lat.toFixed(4)}, ${driver.lng.toFixed(4)}
-            </div>
+            <div style="font-size: 12px; color: #6c757d;">Rute: ${driver.route}</div>
             <div style="margin-top: 5px;">
               <span style="
                 font-size: 11px;
@@ -511,38 +454,19 @@ export default {
         marker.bindPopup(popupContent);
         this.markers[driver.id] = marker;
       });
-
-      console.log(`Berhasil menambahkan ${Object.keys(this.markers).length} marker ke peta`);
     },
 
     // Method untuk simulasi pergerakan driver (opsional)
     simulateDriverMovement() {
       setInterval(() => {
         this.dummyDrivers.forEach(driver => {
-          // Simulasi pergerakan kecil (dalam batas area Manado)
-          const moveDistance = 0.0008; // Sekitar 80 meter
+          // Simulasi pergerakan kecil
+          const moveDistance = 0.001; // Sekitar 100 meter
+          driver.lat += (Math.random() - 0.5) * moveDistance;
+          driver.lng += (Math.random() - 0.5) * moveDistance;
           
-          // Batas area Manado untuk mencegah driver keluar dari area
-          const bounds = {
-            north: 1.52,
-            south: 1.42,
-            west: 124.78,
-            east: 124.90
-          };
-          
-          // Generate pergerakan random tapi tetap dalam batas
-          let newLat = driver.lat + (Math.random() - 0.5) * moveDistance;
-          let newLng = driver.lng + (Math.random() - 0.5) * moveDistance;
-          
-          // Pastikan tidak keluar dari batas Manado
-          newLat = Math.max(bounds.south, Math.min(bounds.north, newLat));
-          newLng = Math.max(bounds.west, Math.min(bounds.east, newLng));
-          
-          driver.lat = parseFloat(newLat.toFixed(6));
-          driver.lng = parseFloat(newLng.toFixed(6));
-          
-          // Kadang-kadang ubah status (probabilitas lebih kecil untuk menghindari perubahan terlalu sering)
-          if (Math.random() < 0.02) { // 2% chance
+          // Kadang-kadang ubah status
+          if (Math.random() < 0.05) { // 5% chance
             const statuses = ['online', 'busy', 'offline'];
             driver.status = statuses[Math.floor(Math.random() * statuses.length)];
           }
@@ -556,15 +480,15 @@ export default {
               html: `
                 <div style="
                   background-color: ${color};
-                  width: 12px;
-                  height: 12px;
+                  width: 16px;
+                  height: 16px;
                   border-radius: 50%;
                   border: 2px solid white;
-                  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+                  box-shadow: 0 0 5px rgba(0,0,0,0.5);
                 "></div>
               `,
-              iconSize: [12, 12],
-              iconAnchor: [6, 6]
+              iconSize: [16, 16],
+              iconAnchor: [8, 8]
             });
             
             marker.setLatLng([driver.lat, driver.lng]);
@@ -572,12 +496,9 @@ export default {
             
             // Update popup content
             const popupContent = `
-              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-width: 150px;">
+              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                 <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
-                <div style="font-size: 12px; color: #6c757d; margin-bottom: 3px;">Rute: ${driver.route}</div>
-                <div style="font-size: 11px; color: #868e96; margin-bottom: 5px;">
-                  Lokasi: ${driver.lat.toFixed(4)}, ${driver.lng.toFixed(4)}
-                </div>
+                <div style="font-size: 12px; color: #6c757d;">Rute: ${driver.route}</div>
                 <div style="margin-top: 5px;">
                   <span style="
                     font-size: 11px;
@@ -595,7 +516,7 @@ export default {
             marker.setPopupContent(popupContent);
           }
         });
-      }, 8000); // Update setiap 8 detik untuk mengurangi beban
+      }, 5000); // Update setiap 5 detik
     },
 
     initTrafficMap() {
@@ -604,7 +525,7 @@ export default {
         return;
       }
 
-      this.map = L.map("trafficMap").setView(this.mapCenter, 12); // Zoom out sedikit untuk melihat semua driver
+      this.map = L.map("trafficMap").setView(this.mapCenter, 13);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
@@ -618,7 +539,7 @@ export default {
 
       // Track marker berdasarkan user_id dari WebSocket (tetap ada untuk data real)
       try {
-        this.wsConnection = new WebSocket("ws://188.166.179.146:8000/api/tracking/ws/location");
+        this.wsConnection = new WebSocket("ws://mikronet.systems/api/tracking/ws/location");
 
         this.wsConnection.onmessage = (event) => {
           try {
@@ -633,8 +554,8 @@ export default {
                   width: 16px;
                   height: 16px;
                   border-radius: 50%;
-                  border: 3px solid white;
-                  box-shadow: 0 0 5px rgba(0,0,0,0.7);
+                  border: 2px solid white;
+                  box-shadow: 0 0 5px rgba(0,0,0,0.5);
                 "></div>
               `,
               iconSize: [16, 16],
@@ -647,7 +568,7 @@ export default {
               this.markers[`real_${user_id}`].setIcon(icon);
               this.markers[`real_${user_id}`].setPopupContent(`${name} - Status: ${status} (Real-time)`);
             } else {
-              // Buat marker baru untuk data real (dengan border lebih tebal untuk membedakan)
+              // Buat marker baru untuk data real
               const marker = L.marker([lat, lng], { icon }).addTo(this.map);
               marker.bindPopup(`${name} - Status: ${status} (Real-time)`);
               this.markers[`real_${user_id}`] = marker;
@@ -683,7 +604,7 @@ export default {
 
     async fetchUsers(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/users", { method: "GET", headers });
         const result = await response.json();
         this.stats.users = result.data?.count || 0;
       } catch (err) {
@@ -693,7 +614,7 @@ export default {
 
     async fetchDrivers(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", { method: "GET", headers });
         const result = await response.json();
         this.stats.drivers = result.data?.count || 0;
       } catch (err) {
@@ -703,7 +624,7 @@ export default {
 
     async fetchRoutes(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/routes", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/routes", { method: "GET", headers });
         const result = await response.json();
         this.stats.routes = result.data?.count || result.total || 0;
       } catch (err) {
@@ -714,7 +635,7 @@ export default {
 
     async fetchDriversList(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", { method: "GET", headers });
         const result = await response.json();
         this.driversList = result.data?.drivers || [];
       } catch (err) {
@@ -724,7 +645,7 @@ export default {
 
     async fetchReviews(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/reviews", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/reviews", { method: "GET", headers });
         const result = await response.json();
         this.reviews = result.data.reviews.map((review) => ({
           id: review.id,
@@ -755,16 +676,6 @@ export default {
         busy,
         offline
       };
-    },
-
-    // Method untuk mendapatkan driver berdasarkan status
-    getDriversByStatus(status) {
-      return this.dummyDrivers.filter(d => d.status === status);
-    },
-
-    // Method untuk mendapatkan driver berdasarkan rute
-    getDriversByRoute(route) {
-      return this.dummyDrivers.filter(d => d.route === route);
     },
   },
 };

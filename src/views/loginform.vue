@@ -72,7 +72,7 @@
     },
     async handleLogin() {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/auth/login", {
+        const response = await fetch("https://mikronet.systems/api/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

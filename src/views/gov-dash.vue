@@ -259,7 +259,7 @@ export default {
       };
 
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/users", {
           method: "GET",
           headers,
         });
@@ -383,7 +383,7 @@ initTrafficMap() {
   // Track marker berdasarkan user_id
   const markers = {};
 
-  const ws = new WebSocket("ws://188.166.179.146:8000/api/tracking/ws/location");
+  const ws = new WebSocket("ws://mikronet.systems/api/tracking/ws/location");
 
   ws.onmessage = (event) => {
     try {
@@ -445,7 +445,7 @@ initTrafficMap() {
 
     async fetchUsers(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/users", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/users", { method: "GET", headers });
         const result = await response.json();
         this.stats.users = result.data?.count || 0;
       } catch (err) {
@@ -455,7 +455,7 @@ initTrafficMap() {
 
     async fetchDrivers(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", { method: "GET", headers });
         const result = await response.json();
         this.stats.drivers = result.data?.count || 0;
       } catch (err) {
@@ -465,7 +465,7 @@ initTrafficMap() {
 
     async fetchRoutes(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/routes", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/routes", { method: "GET", headers });
         const result = await response.json();
         this.stats.routes = result.data?.count || result.total || 0;
       } catch (err) {
@@ -476,7 +476,7 @@ initTrafficMap() {
 
     async fetchDriversList(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", { method: "GET", headers });
         const result = await response.json();
         this.driversList = result.data?.drivers || [];
       } catch (err) {
@@ -486,7 +486,7 @@ initTrafficMap() {
 
     async fetchReviews(headers) {
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/reviews", { method: "GET", headers });
+        const response = await fetch("https://mikronet.systems/api/dashboard/reviews", { method: "GET", headers });
         const result = await response.json();
         this.reviews = result.data.reviews.map((review) => ({
           id: review.id,

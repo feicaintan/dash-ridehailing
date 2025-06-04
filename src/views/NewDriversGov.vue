@@ -157,7 +157,7 @@ export default {
       this.isLoading = true;
       const token = localStorage.getItem("access_token");
       try {
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/drivers", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/drivers", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -200,7 +200,7 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await fetch(`http://188.166.179.146:8000/api/dashboard/drivers/verified/${driver.id}`, {
+            const response = await fetch(`https://mikronet.systems/api/dashboard/drivers/verified/${driver.id}`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,

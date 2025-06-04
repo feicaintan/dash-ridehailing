@@ -140,7 +140,7 @@ export default {
 
       try {
         const response = await fetch(
-          "http://188.166.179.146:8000/api/dashboard/reviews",
+          "https://mikronet.systems/api/dashboard/reviews",
           {
             method: "GET",
             headers: {

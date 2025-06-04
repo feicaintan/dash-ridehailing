@@ -89,7 +89,7 @@ export default {
       Authorization: `Bearer ${token}`,
     };
 
-    const response = await fetch("http://188.166.179.146:8000/api/dashboard/block", {
+    const response = await fetch("https://mikronet.systems/api/dashboard/block", {
       method: "GET",
       headers,
     });
@@ -144,7 +144,7 @@ export default {
         const token = localStorage.getItem("access_token") || "";
         if (!token.trim()) return;
 
-        const response = await fetch(`http://188.166.179.146:8000/api/dashboard/block/${driver.id}`, {
+        const response = await fetch(`https://mikronet.systems/api/dashboard/block/${driver.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

@@ -222,7 +222,7 @@ export default {
   methods: {
     fetchMonthlyReport() {
       const currentMonth = this.currentDate.getMonth() + 1;
-      const url = `http://188.166.179.146:8000/api/dashboard/reports?month=${currentMonth}`;
+      const url = `https://mikronet.systems/api/dashboard/reports?month=${currentMonth}`;
 
       const token = localStorage.getItem("access_token");
 

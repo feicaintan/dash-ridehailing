@@ -82,7 +82,7 @@ export default {
           return;
         }
 
-        const response = await fetch("http://188.166.179.146:8000/api/dashboard/block", {
+        const response = await fetch("https://mikronet.systems/api/dashboard/block", {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -135,7 +135,7 @@ export default {
       return;
     }
 
-    const response = await fetch(`http://188.166.179.146:8000/api/dashboard/block/${driver.id}`, {
+    const response = await fetch(`https://mikronet.systems/api/dashboard/block/${driver.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -153,7 +153,7 @@ export default {
         return Promise.resolve();
       }
 
-      return fetch(`http://188.166.179.146:8000/api/dashboard/routeS?t=${Date.now()}`, {
+      return fetch(`https://mikronet.systems/api/dashboard/routeS?t=${Date.now()}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -213,7 +213,7 @@ export default {
       const accessToken = this.getAccessToken();
       if (!accessToken) return;
 
-      fetch('http://188.166.179.146:8000/api/dashboard/route', {
+      fetch('https://mikronet.systems/api/dashboard/route', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -270,7 +270,7 @@ export default {
           const accessToken = this.getAccessToken();
           if (!accessToken) return;
 
-          fetch(`http://188.166.179.146:8000/api/dashboard/route/${route.ID}`, {
+          fetch(`https://mikronet.systems/api/dashboard/route/${route.ID}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${accessToken}`,

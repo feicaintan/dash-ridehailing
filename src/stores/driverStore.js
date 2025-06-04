@@ -18,7 +18,7 @@ export const useDriverStore = defineStore('driver', {
     },
     async fetchActiveDrivers() {
       try {
-        const response = await fetch('http://188.166.179.146:8000/api/dashboard/drivers', {
+        const response = await fetch('https://mikronet.systems/api/dashboard/drivers', {
           headers: {
             Authorization: `Bearer ${this.token}`,
             'Content-Type': 'application/json',

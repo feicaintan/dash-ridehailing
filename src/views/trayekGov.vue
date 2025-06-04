@@ -133,7 +133,7 @@ export default {
         }
         
         // Fetch data from API
-        fetch('http://188.166.179.146:8000/api/dashboard/routeS', {
+        fetch('https://mikronet.systems/api/dashboard/routeS', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -205,7 +205,7 @@ export default {
         if (!accessToken) return;
         
         // Add new route via API
-        fetch('http://188.166.179.146:8000/api/dashboard/route', {
+        fetch('https://mikronet.systems/api/dashboard/route', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -321,7 +321,7 @@ export default {
         if (!accessToken) return;
         
         // Update route via API
-        fetch(`http://188.166.179.146:8000/api/dashboard/route/update/${route.ID}`, {
+        fetch(`https://mikronet.systems/api/dashboard/route/update/${route.ID}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -387,7 +387,7 @@ export default {
             if (!accessToken) return;
             
             // Delete route via API
-            fetch(`http://188.166.179.146:8000/api/dashboard/route/delete/${route.ID}`, {
+            fetch(`https://mikronet.systems/api/dashboard/route/delete/${route.ID}`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${accessToken}`,

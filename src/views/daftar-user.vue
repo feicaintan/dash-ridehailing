@@ -169,7 +169,7 @@ export default {
         timeout: null
       },
       users: [],
-      apiUrl: "http://188.166.179.146:8000/api/dashboard/users",
+      apiUrl: "https://mikronet.systems/api/dashboard/users",
       sortField: "name",
       sortDirection: "asc",
       currentPage: 1,
