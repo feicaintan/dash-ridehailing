@@ -12,135 +12,56 @@
         <h3 class="menu-title">MENU</h3>
         <ul>
           <li>
-              <router-link to="/govdash" class="menu-item" :class="{ active: activeMenu === 'govdash' }"
-              @click="setActiveMenu('gov-dash')">
+            <router-link to="/govdash" class="menu-item" :class="{ active: activeMenu === 'govdash' }" @click="setActiveMenu('govdash')">
               <img src="@/assets/dash.png" alt="Logo Dashboard" class="button-image inline" />
               Dashboard
-          </router-link>
+            </router-link>
           </li>
-
           <li>
-            <router-link to="/management" class="menu-item" :class="{ active: activeMenu === 'management' }"
-              @click="setActiveMenu('management')">
+            <router-link to="/management" class="menu-item" :class="{ active: activeMenu === 'management' }" @click="setActiveMenu('management')">
               <img src="@/assets/management.png" alt="Logo Manajemen Kebijakan" class="button-image inline" />
               Manajemen Kebijakan
             </router-link>
           </li>
-
           <li>
-            <router-link
-              to="/LogActivityGov"
-              class="menu-item"
-              :class="{ active: activeMenu === 'log-activity' }"
-              @click="setActiveMenu('admin-data')"
-            >
-              <img
-                src="@/assets/monitoring.png"
-                alt="Logo Log Aktivitas"
-                class="button-image inline"
-              />
+            <router-link to="/LogActivityGov" class="menu-item" :class="{ active: activeMenu === 'log-activity' }" @click="setActiveMenu('log-activity')">
+              <img src="@/assets/monitoring.png" alt="Logo Log Aktivitas" class="button-image inline" />
               Log Aktivitas
             </router-link>
           </li>
-
           <li>
-            <router-link to="/analysis" class="menu-item active" :class="{ active: activeMenu === 'analysis' }"
-              @click="setActiveMenu('analysis')">
+            <router-link to="/analysis" class="menu-item active" :class="{ active: activeMenu === 'analysis' }" @click="setActiveMenu('analysis')">
               <img src="@/assets/anlysis.png" alt="Logo Analysis" class="button-image inline" />
               Laporan & Analisis
             </router-link>
           </li>
-
           <li>
-            <router-link to="/tarifruteGov" class="menu-item" :class="{ active: activeMenu === 'tarifruteGov' }"
-              @click="setActiveMenu('tarifruteGov')">
+            <router-link to="/tarifruteGov" class="menu-item" :class="{ active: activeMenu === 'tarifruteGov' }" @click="setActiveMenu('tarifruteGov')">
               <img src="@/assets/tarif.png" alt="Logo Keluhan/Blokir" class="button-image inline" />
               Tarif Rute
             </router-link>
           </li>
-
         </ul>
       </nav>
       <hr class="divider" />
       <router-link to="/loginform" class="menu-item" :class="{ active: activeMenu === 'home' }" @click="setActiveMenu('home')">
-          <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
-          Login as Admin
-        </router-link>
+        <img src="@/assets/quit.png" alt="Logo Quit" class="button-image inline" />
+        Login as Admin
+      </router-link>
     </aside>
-    
+
     <!-- Main Content -->
     <main class="main-content">
       <div class="header">
         <h2>Laporan dan Analisis</h2>
       </div>
 
-    <!-- Laporan Kinerja Bulan Ini -->
-    <section class="report-section">
-      <h3>Laporan Kinerja Bulan Ini</h3>
-      <div class="data-date">
-        <p>Bulan Data: {{ monthDisplay }}</p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Parameter</th>
-            <th>Nilai</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Total Pengguna</td>
-            <td>{{ reportData.common.total_passenger }}</td>
-          </tr>
-          <tr>
-            <td>Total Driver</td>
-            <td>{{ reportData.common.total_driver }}</td>
-          </tr>
-          <tr>
-            <td>Total Perjalanan</td>
-            <td>{{ reportData.common.total_trip }}</td>
-          </tr>
-          <tr>
-            <td>Total Pendapatan</td>
-            <td>Rp {{ formatRupiah(reportData.common.total_revenue) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Laporan Penggunaan Rute Bulan Ini -->
-    <section class="report-section">
-      <h3>Laporan Penggunaan Rute Bulan Ini</h3>
-      <div class="data-date">
-        <p>Bulan Data: {{ monthDisplay }}</p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Rute</th>
-            <th>Jumlah Perjalanan</th>
-            <th>Pendapatan</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="trip in reportData.trips" :key="trip.route">
-            <td>{{ trip.route }}</td>
-            <td>{{ trip.total }}</td>
-            <td>Rp {{ formatRupiah(trip.revenue) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-      <!-- Tombol Unduh Laporan -->
-      <!-- <section class="download-section">
-        <button @click="downloadReport">Unduh Laporan</button>
-      </section> -->
-
-      <!-- Elemen untuk Tampilan Cetak -->
-      <div id="printableArea" style="display: none;">
-        <h2>Laporan dan Analisis</h2>
-        <h3>Laporan Kinerja Umum</h3>
+      <!-- Laporan Kinerja Minggu Ini -->
+      <section class="report-section">
+        <h3>Laporan Kinerja Minggu Ini</h3>
+        <div class="data-date">
+          <p>Bulan Data: {{ monthDisplay }} | Minggu ke-{{ weekOfMonth }}</p>
+        </div>
         <table>
           <thead>
             <tr>
@@ -151,25 +72,30 @@
           <tbody>
             <tr>
               <td>Total Pengguna</td>
-              <td>1,500</td>
+              <td>{{ reportData.common.total_passenger }}</td>
             </tr>
             <tr>
               <td>Total Driver</td>
-              <td>300</td>
+              <td>{{ reportData.common.total_driver }}</td>
             </tr>
             <tr>
               <td>Total Perjalanan</td>
-              <td>5,000</td>
+              <td>{{ reportData.common.total_trip }}</td>
             </tr>
             <tr>
               <td>Total Pendapatan</td>
-              <td>Rp 50,000,000</td>
+              <td>Rp {{ formatRupiah(reportData.common.total_revenue) }}</td>
             </tr>
           </tbody>
         </table>
+      </section>
 
-
-        <h3>Laporan Penggunaan Rute</h3>
+      <!-- Laporan Penggunaan Rute Minggu Ini -->
+      <section class="report-section">
+        <h3>Laporan Penggunaan Rute Minggu Ini</h3>
+        <div class="data-date">
+          <p>Bulan Data: {{ monthDisplay }} | Minggu ke-{{ weekOfMonth }}</p>
+        </div>
         <table>
           <thead>
             <tr>
@@ -179,19 +105,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Rute A</td>
-              <td>2,000</td>
-              <td>Rp 20,000,000</td>
-            </tr>
-            <tr>
-              <td>Rute B</td>
-              <td>1,500</td>
-              <td>Rp 15,000,000</td>
+            <tr v-for="trip in reportData.trips" :key="trip.route">
+              <td>{{ trip.route }}</td>
+              <td>{{ trip.total }}</td>
+              <td>Rp {{ formatRupiah(trip.revenue) }}</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
     </main>
   </div>
 </template>
@@ -217,6 +138,12 @@ export default {
     monthDisplay() {
       const options = { month: "long", year: "numeric" };
       return this.currentDate.toLocaleDateString("id-ID", options);
+    },
+    weekOfMonth() {
+      const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+      const firstDayWeek = firstDay.getDay() || 7;
+      const offset = this.currentDate.getDate() + firstDayWeek - 1;
+      return Math.ceil(offset / 7);
     }
   },
   methods: {
@@ -257,6 +184,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 /* General Layout */

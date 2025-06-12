@@ -229,19 +229,8 @@ export default {
         { id: 1, name: "Daniel", location: [1.4748, 124.8421], status: "online" },
         { id: 2, name: "Kevin", location: [1.47, 124.85], status: "offline" },
       ],
-      // Data dummy driver yang lebih lengkap
-      dummyDrivers: [
-        { id: 1, name: "Daniel Simbolon", lat: 1.4748, lng: 124.8421, status: "online", route: "Manado-Kawangkaren" },
-        { id: 2, name: "Kevin Mandagi", lat: 1.4700, lng: 124.8500, status: "offline", route: "Pusat Kota" },
-        { id: 3, name: "Maria Sondakh", lat: 1.4800, lng: 124.8350, status: "busy", route: "Manado-Tomohon" },
-        { id: 4, name: "Robert Pangkey", lat: 1.4650, lng: 124.8600, status: "online", route: "Manado-Bitung" },
-        { id: 6, name: "Jefry Kalangi", lat: 1.4680, lng: 124.8480, status: "busy", route: "Wenang" },
-        { id: 7, name: "Linda Rompies", lat: 1.4750, lng: 124.8380, status: "online", route: "Tikala" },
-        { id: 9, name: "Grace Tumundo", lat: 1.4600, lng: 124.8650, status: "busy", route: "Wanea" },
-        { id: 10, name: "David Rumondor", lat: 1.4780, lng: 124.8450, status: "online", route: "Sario" },
-        { id: 11, name: "Rina Mantiri", lat: 1.4720, lng: 124.8320, status: "online", route: "Singkil" },
-        { id: 12, name: "Bobby Kaunang", lat: 1.4850, lng: 124.8550, status: "online", route: "Paal Dua" }
-      ],
+      // Data dummy 100 driver di sekitar Manado
+      dummyDrivers: this.generateDummyDrivers(),
       driversList: [],
       activeMenu: "admin-dash",
       reviews: [],
@@ -267,6 +256,241 @@ export default {
     }
   },
   methods: {
+    // Method untuk generate 100 driver dummy di area daratan kota Manado
+    generateDummyDrivers() {
+      const drivers = [];
+      const names = [
+        "Maria Sondakh", "Robert Pangkey",
+         "Grace Tumundo", "David Rumondor",
+        "Christy Luntungan", "Irene Tombokan",
+        "Michael Lengkong", "Martha Kandou", "Ferdy Supit",
+         "William Turang", "Jonathan Wongkar",
+        "Steven Waworuntu", "Venny Sumarauw", "Andreas Lawalata", "Richard Kumaat",
+        "Jacky Tumanduk", "Febby Kawulur", "Olivia Paat",
+        "Cindy Palit", "Tommy Rotinsulu", "Rudy Parengkuan", "Viona Rarung",
+        "Benny Sumampouw", "Nova Pangkey", "Denny Watulingas", "Tony Kandoli",
+        "Serly Mamahit", "Billy Kumendong", "Merry Palendeng", "Ricky Paat", "Dessy Karundeng"
+      ];
+      
+      const routes = [
+        "Pusat Kota", "Wenang", "Tikala", "Wanea", "Sario", "Singkil", "Paal Dua", 
+        "Kleak", "Malalayang", "Tuminting", "Mapanget", "Paniki", "Boulevard", 
+        "Sam Ratulangi", "Ring Road", "Terminal Malalayang", "Pasar Bersehati", 
+        "Mega Mall", "IT Center", "Karombasan", "Ranotana", "Wenang-Tikala",
+        "Sario-Malalayang", "Boulevard-Megamas", "Paal Dua-Karombasan"
+      ];
+      
+      // Area daratan spesifik di Kota Manado (menghindari area laut)
+      const landAreas = [
+        // Area Pusat Kota Manado
+        {
+          name: "Pusat Kota",
+          bounds: {
+            north: 1.4900,
+            south: 1.4820,
+            east: 124.8500,
+            west: 124.8400
+          }
+        },
+        // Area Wenang
+        {
+          name: "Wenang",
+          bounds: {
+            north: 1.4880,
+            south: 1.4800,
+            east: 124.8550,
+            west: 124.8450
+          }
+        },
+        // Area Tikala
+        {
+          name: "Tikala",
+          bounds: {
+            north: 1.4950,
+            south: 1.4870,
+            east: 124.8600,
+            west: 124.8500
+          }
+        },
+        // Area Wanea
+        {
+          name: "Wanea",
+          bounds: {
+            north: 1.4850,
+            south: 1.4770,
+            east: 124.8650,
+            west: 124.8550
+          }
+        },
+        // Area Sario
+        {
+          name: "Sario",
+          bounds: {
+            north: 1.4920,
+            south: 1.4840,
+            east: 124.8480,
+            west: 124.8380
+          }
+        },
+        // Area Singkil
+        {
+          name: "Singkil",
+          bounds: {
+            north: 1.4800,
+            south: 1.4720,
+            east: 124.8520,
+            west: 124.8420
+          }
+        },
+        // Area Paal Dua
+        {
+          name: "Paal Dua",
+          bounds: {
+            north: 1.4750,
+            south: 1.4670,
+            east: 124.8580,
+            west: 124.8480
+          }
+        },
+        // Area Malalayang
+        {
+          name: "Malalayang",
+          bounds: {
+            north: 1.4680,
+            south: 1.4600,
+            east: 124.8650,
+            west: 124.8550
+          }
+        },
+        // Area Tuminting
+        {
+          name: "Tuminting",
+          bounds: {
+            north: 1.4950,
+            south: 1.4870,
+            east: 124.8650,
+            west: 124.8550
+          }
+        },
+        // Area Mapanget
+        {
+          name: "Mapanget",
+          bounds: {
+            north: 1.5000,
+            south: 1.4920,
+            east: 124.8700,
+            west: 124.8600
+          }
+        },
+        // Area Paniki
+        {
+          name: "Paniki",
+          bounds: {
+            north: 1.4990,
+            south: 1.4910,
+            east: 124.8580,
+            west: 124.8480
+          }
+        },
+        // Area Boulevard
+        {
+          name: "Boulevard",
+          bounds: {
+            north: 1.4880,
+            south: 1.4800,
+            east: 124.8420,
+            west: 124.8320
+          }
+        },
+        // Area Ranotana
+        {
+          name: "Ranotana",
+          bounds: {
+            north: 1.4720,
+            south: 1.4640,
+            east: 124.8700,
+            west: 124.8600
+          }
+        },
+        // Area Karombasan
+        {
+          name: "Karombasan",
+          bounds: {
+            north: 1.4640,
+            south: 1.4560,
+            east: 124.8650,
+            west: 124.8550
+          }
+        }
+      ];
+      
+      for (let i = 1; i <= 100; i++) {
+        // Pilih area daratan secara acak
+        const selectedArea = landAreas[Math.floor(Math.random() * landAreas.length)];
+        
+        // Generate koordinat dalam area daratan yang dipilih
+        const lat = this.randomInRange(selectedArea.bounds.south, selectedArea.bounds.north);
+        const lng = this.randomInRange(selectedArea.bounds.west, selectedArea.bounds.east);
+        
+        // Pilih nama secara acak dan tambahkan nomor jika perlu
+        let driverName;
+        if (i <= names.length) {
+          driverName = names[i - 1];
+        } else {
+          // Jika lebih dari jumlah nama, tambahkan nomor
+          const baseNameIndex = (i - 1) % names.length;
+          const nameNumber = Math.floor((i - 1) / names.length) + 1;
+          driverName = `${names[baseNameIndex]} ${nameNumber}`;
+        }
+        
+        drivers.push({
+          id: i,
+          name: driverName,
+          lat: parseFloat(lat.toFixed(6)),
+          lng: parseFloat(lng.toFixed(6)),
+          status: "online", // Semua driver online
+          route: routes[Math.floor(Math.random() * routes.length)],
+          area: selectedArea.name // Menambahkan info area untuk referensi
+        });
+      }
+      
+      return drivers;
+    },
+    
+    // Helper method untuk generate angka random dalam range
+    randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    },
+
+    // Method baru untuk validasi posisi daratan
+    isValidLandPosition(lat, lng) {
+      // Definisi area daratan yang valid (sama seperti di generateDummyDrivers)
+      const validLandAreas = [
+        { north: 1.4900, south: 1.4820, east: 124.8500, west: 124.8400 }, // Pusat Kota
+        { north: 1.4880, south: 1.4800, east: 124.8550, west: 124.8450 }, // Wenang
+        { north: 1.4950, south: 1.4870, east: 124.8600, west: 124.8500 }, // Tikala
+        { north: 1.4850, south: 1.4770, east: 124.8650, west: 124.8550 }, // Wanea
+        { north: 1.4920, south: 1.4840, east: 124.8480, west: 124.8380 }, // Sario
+        { north: 1.4800, south: 1.4720, east: 124.8520, west: 124.8420 }, // Singkil
+        { north: 1.4750, south: 1.4670, east: 124.8580, west: 124.8480 }, // Paal Dua
+        { north: 1.4680, south: 1.4600, east: 124.8650, west: 124.8550 }, // Malalayang
+        { north: 1.4950, south: 1.4870, east: 124.8650, west: 124.8550 }, // Tuminting
+        { north: 1.5000, south: 1.4920, east: 124.8700, west: 124.8600 }, // Mapanget
+        { north: 1.4990, south: 1.4910, east: 124.8580, west: 124.8480 }, // Paniki
+        { north: 1.4880, south: 1.4800, east: 124.8420, west: 124.8320 }, // Boulevard
+        { north: 1.4720, south: 1.4640, east: 124.8700, west: 124.8600 }, // Ranotana
+        { north: 1.4640, south: 1.4560, east: 124.8650, west: 124.8550 }  // Karombasan
+      ];
+      
+      // Cek apakah koordinat berada dalam salah satu area daratan yang valid
+      return validLandAreas.some(area => 
+        lat >= area.south && 
+        lat <= area.north && 
+        lng >= area.west && 
+        lng <= area.east
+      );
+    },
+
     async fetchPassengerAgeData() {
       const token = localStorage.getItem("access_token");
       if (!token) return console.error("Token tidak ditemukan di localStorage (access_token)");
@@ -408,6 +632,8 @@ export default {
     addDummyDriversToMap() {
       if (!this.map) return;
 
+      console.log(`Menambahkan ${this.dummyDrivers.length} driver ke map...`);
+
       this.dummyDrivers.forEach(driver => {
         const color = this.getStatusColor(driver.status);
         
@@ -417,15 +643,15 @@ export default {
           html: `
             <div style="
               background-color: ${color};
-              width: 16px;
-              height: 16px;
+              width: 12px;
+              height: 12px;
               border-radius: 50%;
               border: 2px solid white;
-              box-shadow: 0 0 5px rgba(0,0,0,0.5);
+              box-shadow: 0 0 3px rgba(0,0,0,0.5);
             "></div>
           `,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8]
+          iconSize: [12, 12],
+          iconAnchor: [6, 6]
         });
         
         // Create marker
@@ -433,14 +659,16 @@ export default {
         
         // Create popup content
         const popupContent = `
-          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
-            <div style="font-size: 12px; color: #6c757d;">Rute: ${driver.route}</div>
-            <div style="margin-top: 5px;">
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;">
+            <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">ID: ${driver.id}</div>
+            <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">${driver.name}</div>
+            <div style="font-size: 10px; color: #6c757d; margin-bottom: 5px;">
+            </div>
+            <div>
               <span style="
-                font-size: 11px;
+                font-size: 10px;
                 padding: 2px 6px;
-                border-radius: 8px;
+                border-radius: 6px;
                 background-color: ${color};
                 color: white;
                 display: inline-block;
@@ -454,22 +682,34 @@ export default {
         marker.bindPopup(popupContent);
         this.markers[driver.id] = marker;
       });
+      
+      console.log(`Berhasil menambahkan ${Object.keys(this.markers).length} marker ke map`);
     },
 
-    // Method untuk simulasi pergerakan driver (opsional)
+    // Method untuk simulasi pergerakan driver yang diperbaiki
     simulateDriverMovement() {
       setInterval(() => {
         this.dummyDrivers.forEach(driver => {
-          // Simulasi pergerakan kecil
-          const moveDistance = 0.001; // Sekitar 100 meter
-          driver.lat += (Math.random() - 0.5) * moveDistance;
-          driver.lng += (Math.random() - 0.5) * moveDistance;
+          // Simulasi pergerakan yang lebih kecil dan terkontrol
+          const moveDistance = 0.0002; // Sekitar 20 meter
           
-          // Kadang-kadang ubah status
-          if (Math.random() < 0.05) { // 5% chance
-            const statuses = ['online', 'busy', 'offline'];
-            driver.status = statuses[Math.floor(Math.random() * statuses.length)];
+          // Tentukan batas pergerakan berdasarkan posisi saat ini
+          const currentLat = driver.lat;
+          const currentLng = driver.lng;
+          
+          // Buat pergerakan acak kecil
+          const latChange = (Math.random() - 0.5) * moveDistance;
+          const lngChange = (Math.random() - 0.5) * moveDistance;
+          
+          const newLat = currentLat + latChange;
+          const newLng = currentLng + lngChange;
+          
+          // Validasi apakah posisi baru masih dalam area daratan yang valid
+          if (this.isValidLandPosition(newLat, newLng)) {
+            driver.lat = newLat;
+            driver.lng = newLng;
           }
+          // Jika posisi tidak valid, driver tetap di posisi sebelumnya
           
           // Update marker di map
           const marker = this.markers[driver.id];
@@ -480,15 +720,15 @@ export default {
               html: `
                 <div style="
                   background-color: ${color};
-                  width: 16px;
-                  height: 16px;
+                  width: 12px;
+                  height: 12px;
                   border-radius: 50%;
                   border: 2px solid white;
-                  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                  box-shadow: 0 0 3px rgba(0,0,0,0.5);
                 "></div>
               `,
-              iconSize: [16, 16],
-              iconAnchor: [8, 8]
+              iconSize: [12, 12],
+              iconAnchor: [6, 6]
             });
             
             marker.setLatLng([driver.lat, driver.lng]);
@@ -496,14 +736,16 @@ export default {
             
             // Update popup content
             const popupContent = `
-              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${driver.name}</div>
-                <div style="font-size: 12px; color: #6c757d;">Rute: ${driver.route}</div>
-                <div style="margin-top: 5px;">
+              <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px;">
+                <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">ID: ${driver.id}</div>
+                <div style="font-weight: 600; color: #495057; margin-bottom: 3px;">${driver.name}</div>
+                <div style="font-size: 11px; color: #6c757d; margin-bottom: 3px;">Rute: ${driver.route}</div>
+                </div>
+                <div>
                   <span style="
-                    font-size: 11px;
+                    font-size: 10px;
                     padding: 2px 6px;
-                    border-radius: 8px;
+                    border-radius: 6px;
                     background-color: ${color};
                     color: white;
                     display: inline-block;
@@ -516,7 +758,7 @@ export default {
             marker.setPopupContent(popupContent);
           }
         });
-      }, 5000); // Update setiap 5 detik
+      }, 10000); // Update setiap 10 detik
     },
 
     initTrafficMap() {
@@ -525,16 +767,17 @@ export default {
         return;
       }
 
-      this.map = L.map("trafficMap").setView(this.mapCenter, 13);
+      this.map = L.map("trafficMap").setView(this.mapCenter, 14); // Zoom level lebih dekat untuk area kota
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
+        maxZoom: 18
       }).addTo(this.map);
 
       // Tambahkan data dummy driver ke map
       this.addDummyDriversToMap();
       
-      // Mulai simulasi pergerakan (opsional)
+      // Mulai simulasi pergerakan
       this.simulateDriverMovement();
 
       // Track marker berdasarkan user_id dari WebSocket (tetap ada untuk data real)
@@ -554,8 +797,8 @@ export default {
                   width: 16px;
                   height: 16px;
                   border-radius: 50%;
-                  border: 2px solid white;
-                  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                  border: 3px solid white;
+                  box-shadow: 0 0 5px rgba(0,0,0,0.7);
                 "></div>
               `,
               iconSize: [16, 16],
@@ -566,11 +809,23 @@ export default {
               // Update posisi & ikon marker real
               this.markers[`real_${user_id}`].setLatLng([lat, lng]);
               this.markers[`real_${user_id}`].setIcon(icon);
-              this.markers[`real_${user_id}`].setPopupContent(`${name} - Status: ${status} (Real-time)`);
+              this.markers[`real_${user_id}`].setPopupContent(`
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                  <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${name}</div>
+                  <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Status: ${status}</div>
+                  <div style="font-size: 11px; color: #28a745; font-weight: 500;">🔴 REAL-TIME DATA</div>
+                </div>
+              `);
             } else {
               // Buat marker baru untuk data real
               const marker = L.marker([lat, lng], { icon }).addTo(this.map);
-              marker.bindPopup(`${name} - Status: ${status} (Real-time)`);
+              marker.bindPopup(`
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                  <div style="font-weight: 600; color: #495057; margin-bottom: 5px;">${name}</div>
+                  <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Status: ${status}</div>
+                  <div style="font-size: 11px; color: #28a745; font-weight: 500;">🔴 REAL-TIME DATA</div>
+                </div>
+              `);
               this.markers[`real_${user_id}`] = marker;
             }
           } catch (err) {
@@ -676,6 +931,16 @@ export default {
         busy,
         offline
       };
+    },
+
+    // Method untuk mendapatkan driver berdasarkan area tertentu
+    getDriversByArea(bounds) {
+      return this.dummyDrivers.filter(driver => 
+        driver.lat >= bounds.south && 
+        driver.lat <= bounds.north && 
+        driver.lng >= bounds.west && 
+        driver.lng <= bounds.east
+      );
     },
   },
 };

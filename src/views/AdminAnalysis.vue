@@ -115,63 +115,63 @@
         <h2>Laporan dan Analisis</h2>
       </div>
 
-    <!-- Laporan Kinerja Bulan Ini -->
-    <section class="report-section">
-      <h3>Laporan Kinerja Bulan Ini</h3>
-      <div class="data-date">
-        <p>Bulan Data: {{ monthDisplay }}</p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Parameter</th>
-            <th>Nilai</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Total Pengguna</td>
-            <td>{{ reportData.common.total_passenger }}</td>
-          </tr>
-          <tr>
-            <td>Total Driver</td>
-            <td>{{ reportData.common.total_driver }}</td>
-          </tr>
-          <tr>
-            <td>Total Perjalanan</td>
-            <td>{{ reportData.common.total_trip }}</td>
-          </tr>
-          <tr>
-            <td>Total Pendapatan</td>
-            <td>Rp {{ formatRupiah(reportData.common.total_revenue) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- Laporan Kinerja Minggu Ini -->
+      <section class="report-section">
+        <h3>Laporan Kinerja Minggu Ini</h3>
+        <div class="data-date">
+          <p>Bulan Data: {{ monthDisplay }} | Minggu ke-{{ weekOfMonth }}</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Nilai</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total Pengguna</td>
+              <td>{{ reportData.common.total_passenger }}</td>
+            </tr>
+            <tr>
+              <td>Total Driver</td>
+              <td>{{ reportData.common.total_driver }}</td>
+            </tr>
+            <tr>
+              <td>Total Perjalanan</td>
+              <td>{{ reportData.common.total_trip }}</td>
+            </tr>
+            <tr>
+              <td>Total Pendapatan</td>
+              <td>Rp {{ formatRupiah(reportData.common.total_revenue) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-    <!-- Laporan Penggunaan Rute Bulan Ini -->
-    <section class="report-section">
-      <h3>Laporan Penggunaan Rute Bulan Ini</h3>
-      <div class="data-date">
-        <p>Bulan Data: {{ monthDisplay }}</p>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Rute</th>
-            <th>Jumlah Perjalanan</th>
-            <th>Pendapatan</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="trip in reportData.trips" :key="trip.route">
-            <td>{{ trip.route }}</td>
-            <td>{{ trip.total }}</td>
-            <td>Rp {{ formatRupiah(trip.revenue) }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+      <!-- Laporan Penggunaan Rute Minggu Ini -->
+      <section class="report-section">
+        <h3>Laporan Penggunaan Rute Minggu Ini</h3>
+        <div class="data-date">
+          <p>Bulan Data: {{ monthDisplay }} | Minggu ke-{{ weekOfMonth }}</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Rute</th>
+              <th>Jumlah Perjalanan</th>
+              <th>Pendapatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="trip in reportData.trips" :key="trip.route">
+              <td>{{ trip.route }}</td>
+              <td>{{ trip.total }}</td>
+              <td>Rp {{ formatRupiah(trip.revenue) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
   </div>
 </template>
@@ -197,6 +197,12 @@ export default {
     monthDisplay() {
       const options = { month: "long", year: "numeric" };
       return this.currentDate.toLocaleDateString("id-ID", options);
+    },
+    weekOfMonth() {
+      const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
+      const firstDayWeek = firstDay.getDay() || 7;
+      const offset = this.currentDate.getDate() + firstDayWeek - 1;
+      return Math.ceil(offset / 7);
     }
   },
   methods: {
